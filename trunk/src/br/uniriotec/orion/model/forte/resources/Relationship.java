@@ -18,7 +18,7 @@ public class Relationship extends ForteResource {
     public String toString(){
         String result = "";
         for(String s : primeiroTermo){
-            result += nomeRelacionamento + "(A,B) :- " + s + "(A), " + segundoTermo + "(B); ";
+            result += nomeRelacionamento + "(a,b) :- " + s + "(a), " + segundoTermo + "(b); ";
         }
         result = result.substring (0, result.length() - 2);
         return result;
@@ -27,7 +27,7 @@ public class Relationship extends ForteResource {
     public List<String> getRelacionamentos(){
         List<String> result = new ArrayList<String>();
         for(String s : primeiroTermo){
-            result.add(nomeRelacionamento + "(A,B) :- " + s + "(A), " + segundoTermo + "(B)");
+            result.add(nomeRelacionamento + "(a,b) :- " + s + "(a), " + segundoTermo + "(b)");
         }
         return result;
     }
