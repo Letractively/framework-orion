@@ -1,65 +1,65 @@
 
 package br.uniriotec.orion.view;
 
-import com.hp.hpl.jena.ontology.ObjectProperty;
 import br.uniriotec.orion.control.ForteInputGenerator;
-import java.util.Iterator;
-import java.util.Set;
-import br.uniriotec.orion.control.OntologyParser;
+import br.uniriotec.orion.model.forte.resources.Concept;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Classe responsável por realizar a interface com o usuário. Através desta classe é
- * possível dar entrada em uma ontologia no formal OWL/RDF e como output obtem-se um conjunto de
+ * possível dar entrada em uma ontologia no formato OWL/RDF e como output obtem-se um conjunto de
  * três arquivos que serão utilizados como input pelo FORTE.</p>
  * 
  * @author Felipe
  */
 public class OntoForteUI {
-    /*
-     * Inicilmente será considerada a utilização de uma ontologia específica, sem
-     * o input por um usuário. Será utilizada a ontologia padrão gerada pelo Protegé.
-     */
+    
      public OntoForteUI(){
-        
-         //Caminho da ontologia
-        String urlOntologia = "C:/Users/Felipe/Desktop/OntoForte/Ontologia/instOntology_RDF.owl";
-
-        /*
-         * Carregar ontologia
-         */
+        String urlOntologia = "src/input/orion/times_do_rio.owl";
         ForteInputGenerator gerador = new ForteInputGenerator(urlOntologia);
+        List<Concept> conceitosRevisaveis = gerador.retrieveRevisableConcepts();
         
-        String top = gerador.generateTopLevelPredicates();
-
-
-         System.out.println(top);
+        System.out.println("\n=== Regras Revisaveis ===");
+        for(Concept c : conceitosRevisaveis){
+            System.out.println(c);
+        }
         
-
-
-
-//        //Listar Instancias
-//        //recupera a primeira classe da ontologia
-//        OntClass classe = obj.listarClasses().iterator().next();
-//        //Escreve a classe
-//        System.out.println("Classe: "+classe.toString());
-//        //lista todos os individuos da classe
-//        escreverConjunto(obj.listarInstancias(classe));
-
+        /******************************************
+         ** Simular que os 4 primeiros conceitos ** 
+         ** foram escolhidos para revisao        **
+         ******************************************/
+        List<Concept> revisar = new ArrayList<Concept>();
+        for(int i=0; i<4; i++){
+            revisar.add(conceitosRevisaveis.get(i));
+        }
+        System.out.println("\n=== Regras escolhidas para revisao ===");
+        for(Concept c : revisar){
+            System.out.println(c);
+        }
+        
+        /**************************************
+         ** Criar os 4 arquivos para o FORTE **
+         **************************************/
+        try {
+            gerador.generateDomainKnowledgeFile();
+            gerador.generateTheoryRules();
+            gerador.generateFundamentalTheory(revisar);
+            gerador.generateDataFile(revisar);
+        } catch (IOException ex) {
+            Logger.getLogger(OntoForteUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /*********************
+         ** Invocar o FORTE **
+         *********************/
+        
      }
 
-     
-     /**
-     * Escreve no Output todos os itens pertencentes ao conjunto passado.
-     *
-     * @param conjunto
-     */
-    private void escreverConjunto(Set conjunto){
-        Iterator iterador = conjunto.iterator();
-        while(iterador.hasNext()){
-            System.out.println(iterador.next().toString());
-        }
-    }
-    
+  
     
 
 }
