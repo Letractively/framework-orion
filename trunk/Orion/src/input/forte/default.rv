@@ -1,0 +1,8 @@
+:- module(rv, [revision_verifier/1,
+               valid_antes/1,
+               valid_data/1]).
+
+revision_verifier(_).
+valid_antes(_).
+valid_data(_).
+

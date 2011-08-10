@@ -1,0 +1,59 @@
+/* Default theory translator, which just reads and writes clauses the way they are */
+
+:- module(tt, [ read_theory/2,
+                write_theory/2
+              ]).
+
+:- use_module(lists, _, [select/4]).
+:- use_module(basics, _, [member/2]).
+:- use_module(forte_util, _, [output_preds/2]).
+:- use_module(partial_eval, _, [pe_theory/2]).
+:- use_module(utility, _, [decompose/2, freeze/2, no_bindings/1]).
+
+
+/* Read in a theory--assumes that the theory is in a file, and that the file is to be read
+   in its entirety                                                                                */
+
+read_theory(Filename, Theory) :-
+  open(Filename, read, File),
+  read_theory(File, [], Theory),
+  close(File).
+
+read_theory(File, Theory_in, Theory_out) :-
+  read(File, Clause),
+  Clause \== end_of_file, !,
+  decompose(Clause, List),
+  freeze(clause(List), Popsicle),
+  List = [Head|Tail],
+  functor(Head, Name, Arity),
+  functor(Template, Name, Arity),
+  ( no_bindings(member(Template, Tail))
+      -> Type = recursive
+       ; Type = nonrecursive
+  ),
+  add_to_theory(Theory_in, Popsicle, Template, Type, Theory),
+  !, read_theory(File, Theory, Theory_out).
+read_theory(_, Theory, Theory).
+
+add_to_theory(Theory_in, Clause, Template, Type, Theory) :-
+  member(predicate(Template, Nonrec, Rec), Theory_in), !,
+  ( Type == recursive
+      -> New_pred = predicate(Template, Nonrec, [Clause|Rec])
+       ; New_pred = predicate(Template, [Clause|Nonrec], Rec)
+  ),
+  select(predicate(Template, Nonrec, Rec), Theory_in, New_pred, Theory).
+add_to_theory(Theory_in, Clause, Template, Type, [New_pred|Theory_in]) :-
+  ( Type == recursive
+      -> New_pred = predicate(Template, [], [Clause])
+       ; New_pred = predicate(Template, [Clause], [])
+  ).
+
+
+/* Write out a theory--assumes that the output is part of an ongoing process, and hence does
+   not perform any operations like open/close on the file.  The file may well be the screen.      */
+
+write_theory(File, Theory) :-
+  pe_theory(Theory, Theory_out),
+  output_preds(Theory_out, File).
+
+

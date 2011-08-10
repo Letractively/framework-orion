@@ -1,0 +1,4 @@
+:- compile('FundamentalTheory.fdt').
+:- compile('default.rv').
+:- compile('default.et').
+:- compile('default.tt').
