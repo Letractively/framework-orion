@@ -1,0 +1,24 @@
+
+===============================
+ Fluxo de Execução do Sistema:
+===============================
+
+- O usuário insere o caminho para um arquivo OWL.
+- O sistema gera todas as regras possíveis e mostra ao usuário.
+- O usuário escolhe as regras que devem ser revisadas.
+- O sistema cria os arquivos FDT, DOM, DAT e THY, e insere no THY as regras que escolhidas pelo usuário
+- O sistema insere no FDT:
+    - Thing;
+    - Os conceitos primários (subclasse de Thing);
+- O sistema insere no THY todas as regras, as que serão revisadas e que não serão.
+- O sistema insere no DAT:
+    - Os TOP_LEVEL
+    - Os INTERMEDIATE
+    - Strata (a principio vazio)
+    - Shielded (A príncipio vazio)
+    - object_attributes (A príncipio vazio)
+    - object_relations (todos as regras de relacionamento - Que serão inseridas nos Fatos)
+    - language_bias (Padrão definido no Exemplo da Familia)
+    - example (positivos, negativos, ?, fatos)
+- O sistema invoca o FORTE com os arquivos gerados
+- Quando o FORTE terminar de rodar o sistema chama o THY gerado.

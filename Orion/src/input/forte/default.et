@@ -1,0 +1,26 @@
+/* Default example translator.  This is perhaps a little more awkward than it should be.
+   Essentially, test_forte expects read_data_term to be a resatisfiable predicate that
+   continues to return terms until the data file is exhausted.  This means that the
+   predicate is only called once per datafile, but will be resatisfied via backtracking
+   until all data has been processed.  When all data has been processed, the predicate
+   returns the atom end_of_file (the normal return from a read past EOF).
+
+   The data file is opened and closed by this predicate.
+
+   In this default case, where the data file contains exactly what Forte needs, we just
+   need a simple read.  However, if the file requires substantial translation, we might
+   have to read in the entire file at once, translate it, and then provide a resatisfiable
+   sub-predicate to return the translation.                                                       */
+
+:- module(et, [ read_data_term/2
+              ]).
+
+read_data_term(Filename, Term) :-
+  open(Filename, read, File), !,
+  repeat,
+    read(File, Term),
+    ( Term \== end_of_file -> true
+    ; close(File),
+      !                                             /* stop after EOF */
+    ).
+
