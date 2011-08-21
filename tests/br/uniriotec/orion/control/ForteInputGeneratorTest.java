@@ -95,7 +95,7 @@ public class ForteInputGeneratorTest {
      * Executa o método generateConcepts e chama o método toString de cada conceito
      * para gerar a regra que define o ceonceito.
      */
-    @Test
+//    @Test
     public void testGenerateConcepts(){
         System.out.println("\n\n========= Escrever Conceitos =========");
         List<Concept> lista = gerador.generateConcepts();
@@ -108,7 +108,7 @@ public class ForteInputGeneratorTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGenerateRelationships() {
         System.out.println("\n\n========= Escrever Relacionamentos =========");
         List<Relationship> lista = gerador.generateRelationships();
@@ -124,6 +124,14 @@ public class ForteInputGeneratorTest {
     }
 
     @Test
+    public void testRetrieveUnrevisableConcepts(){
+    	List<Concept> cjt = gerador.retrieveUnrevisableConcepts();
+    	for(Concept c : cjt){
+    		System.out.println(c);
+    	}
+    }
+    
+//    @Test
     public void testGeneratePositiveExamples(){
         System.out.println("\n\n========= Escrever Exemplos Positivos =========");
         List<IExample> lista = gerador.generatePositiveExamples();
@@ -132,7 +140,7 @@ public class ForteInputGeneratorTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGenerateObjectAttributes(){
         System.out.println("\n\n========= Escrever Object Attributes =========");
         List<ObjectAttribute> lista = gerador.generateObjectAttributes();
@@ -141,7 +149,7 @@ public class ForteInputGeneratorTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGenerateNegativeExamples(){
         System.out.println("\n\n========= Escrever Exemplos Negativos =========");
         List<IExample> lista = gerador.generateNegativeExamples();
@@ -150,11 +158,11 @@ public class ForteInputGeneratorTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGenerateTopLevelPredicates() {
     }
 
-    @Test
+//    @Test
     public void testGenerateTheory() {
     }
 
