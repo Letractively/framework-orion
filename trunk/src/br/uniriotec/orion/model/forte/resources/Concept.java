@@ -84,6 +84,29 @@ public class Concept extends ForteResource{
         
         return texto;
     }
+    
+    /**
+     * Sobreescrita do método de comparação do objeto. Um objeto Concept é 
+     * considerado igual a um outro objeto Concept quando seus nomes e corpo 
+     * de regra são iguais.
+     */
+    @Override  
+    public boolean equals(Object object) { 
+    	//Verifica se o objeto recebido é um Concept, se não for o teste termina.
+    	if(object instanceof Concept == false){
+    		return false;
+    	}
+    	
+    	Concept c = (Concept) object;
+    	
+    	//Verifica se o méetodo "toString()" gera a mesma String como regra.
+    	if(this.toString().equals(c.toString())){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    	
+    }
    
 
     /**

@@ -50,7 +50,7 @@ public class ForteInputGenerator {
 
     /**
      * Recupera todas as classes da ontologia e gera Conceitos com base nestas classes.
-     * Todos os DataType Properties associados a classe s√£o inseridos no objeto Concept criado
+     * Todos os DataType Properties associados a classe s„o inseridos no objeto Concept criado
      *
      * @return List<Concept>
      */
@@ -77,8 +77,8 @@ public class ForteInputGenerator {
                 ConceptAttribute atrib = new ConceptAttribute();
                 atrib.setNomeAtributo(datatype.getLocalName());
                 atrib.setTipoRange(recuperarDomainsDatatype(datatype));
-                //TODO Os atributos ainda n√£o tem valores definidos, necess√°ria
-                //intera√ß√£o com o usu√°rio
+                //TODO Os atributos ainda n„o tem valores definidos, necess·ria
+                //interaÁ„o com o usu·rio
                 tmpConcept.addAttribute(atrib);
             }
 
@@ -86,8 +86,8 @@ public class ForteInputGenerator {
              * faz referencia a classe pai e adiciona aos axiomas do conceito.
              *
              * Recupera todos os restrictions indicados nos subclassOf restantes
-             * e adiciona como restri√ß√µes no conceito atraves do m√©todo addRestriction
-             * OBS: Restrictions s√£o Superclasses sem LocalName.
+             * e adiciona como restriÁ√µes no conceito atraves do mÈtodo addRestriction
+             * OBS: Restrictions s„o Superclasses sem LocalName.
              */
             if(ontClass.getSuperClass() != null){
                Iterator<OntClass> it = ontClass.listSuperClasses(true);
@@ -99,7 +99,7 @@ public class ForteInputGenerator {
                        axioma.setNome("subClassOf");
                        axioma.setValor(aux.getLocalName());
                        tmpConcept.addConceptAxiom(axioma);
-                   }else{ //√© um restriction
+                   }else{ //È um restriction
                        Restriction restriction = aux.asRestriction();
                        tmpConcept.addConceptRestriction(recuperarDadosRestriction(restriction));
                    }
@@ -108,13 +108,13 @@ public class ForteInputGenerator {
 
             /*
              * Recupera todos os axiomas DisjointWith do conceito e cria um conceito
-             * auxiliar com para permitir a nega√ß√£o.
+             * auxiliar com para permitir a negaÁ„o.
              *
-             * Como o forte n√£o √© capaz de revisar regras com nega√ß√£o √© necess√°rio
-             * criar um novo ceonceito que possui a nega√ß√£o e inclui-lo no FDT.
+             * Como o forte n„o È capaz de revisar regras com negaÁ„o È necess·rio
+             * criar um novo ceonceito que possui a negaÁ„o e inclui-lo no FDT.
              *
-             * Cria-se ent√£o um conceitoNega√ß√£o e um axioma subclassOf relacionando
-             * a classe presente ao conceito negado, de forma que a gera√ß√£o da regra
+             * Cria-se ent„o um conceitoNegaÁ„o e um axioma subclassOf relacionando
+             * a classe presente ao conceito negado, de forma que a geraÁ„o da regra
              * cria um predicado "regraNegacao(A)".
              */
             if(ontClass.getDisjointWith() != null){
@@ -124,8 +124,8 @@ public class ForteInputGenerator {
                 while(it.hasNext()){
                     aux = it.next();
 
-                    //Cria√ß√£o do conceito negativo
-                    //TODO N√£o revisar este conceito
+                    //CriaÁ„o do conceito negativo
+                    //TODO N„o revisar este conceito
                     Concept conceitoNeg = new Concept();
                     ConceptAxiom axiomaNeg = new ConceptAxiom();
                     axiomaNeg.setNome("subClassOf");
@@ -136,7 +136,7 @@ public class ForteInputGenerator {
                     //Adiciona o conceito negativo √† lista de conceitos
                     conceptsList.add(conceitoNeg);
 
-                    //adiciona a referencia de disjun√ß√£o
+                    //adiciona a referencia de disjunÁ„o
                     ConceptAxiom axioma = new ConceptAxiom();
                     axioma.setNome("disjointWith");
                     axioma.setValor(conceitoNeg.getNome());
@@ -147,13 +147,13 @@ public class ForteInputGenerator {
 
             /*
              * Se a classe possuir o axioma EquivalentClass indicando sua
-             * equivalencia a outra classe da ontologia ent√£o ambas dever√£o
-             * ser exclu√≠das da revis√£o, sendo adicionadas ao FDT.
+             * equivalencia a outra classe da ontologia ent„o ambas dever„o
+             * ser excluÌdas da revis„o, sendo adicionadas ao FDT.
              *
-             * Na gera√ß√£o do conceito √© inserido um axioma equivalentClass na lista
+             * Na geraÁ„o do conceito È inserido um axioma equivalentClass na lista
              * de axiomas com o valor igual ao nome do conceito ao qual se refere
-             * a equivalencia. Desta forma ser√° poss√≠vel identificar posteriormente
-             * os dois conceitos que dever√£o ser inseridos no FDT.
+             * a equivalencia. Desta forma ser· possÌvel identificar posteriormente
+             * os dois conceitos que dever„o ser inseridos no FDT.
              */
             if(ontClass.getEquivalentClass() != null){
                 //iterador em cima de todas as classes equivalentes
@@ -175,13 +175,13 @@ public class ForteInputGenerator {
     }
     
     /**
-     * M√©todo para auxiliar a retornar somente os conceitos da ontologia que s√£o
-     * revis√°veis. O m√©todo recupera a lista gerada pelo m√©todo "generateConceps"
-     * e retira aqueles que foram criados como aux√≠lio, possuindo o prefixo "nao"
-     * ou que s√£o subclasse de "Thing".
+     * MÈtodo para auxiliar a retornar somente os conceitos da ontologia que s„o
+     * revis·veis. O mÈtodo recupera a lista gerada pelo mÈtodo "generateConceps"
+     * e retira aqueles que foram criados como auxÌlio, possuindo o prefixo "nao"
+     * ou que s„o subclasse de "Thing".
      * 
-     * OBS: caso n√£o haja qualquer axioma de classe o conceito √© tido como n√£o
-     * revis√°vel, j√° que n√£o possuir um axioma subClassOf indica ser filho de
+     * OBS: caso n„o haja qualquer axioma de classe o conceito È tido como n„o
+     * revis·vel, j· que n„o possuir um axioma subClassOf indica ser filho de
      * "Thing".
      * 
      * @return 
@@ -198,7 +198,7 @@ public class ForteInputGenerator {
                     conceitoRevisavel = false;
                 }else{
                     for(ConceptAxiom ca : c.getAxiomas()){
-                        //Se for subclasse de Thing n√£o √© revisavel
+                        //Se for subclasse de Thing n„o È revisavel
                         if(ca.getNome().equals("subClassOf") && ca.getValor().equals("Thing")){
                             conceitoRevisavel = false;
                         }else if(ca.getNome().equals("equivalentClass")){
@@ -228,19 +228,21 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Este m√©todo retorna todos os conceitos que n√£o podem ser revis√°veis. No caso
-     * os que possuem o prefixo "nao" ou que s√£o subclasse de "Thing". Os conceitos
-     * retornados por este m√©todo devem ser inseridos no arquivo FDT do FORTE.
+     * Este mÈtodo retorna todos os conceitos que n„o podem ser revis·veis. No caso
+     * os que possuem o prefixo "nao" ou que s„o subclasse de "Thing". Os conceitos
+     * retornados por este mÈtodo devem ser inseridos no arquivo FDT do FORTE.
      * 
-     * Conceitos que possuem o axioma de classe EquivalentClass n√£o devem ser 
+     * Conceitos que possuem o axioma de classe EquivalentClass n„o devem ser 
      * revisados, sendo diretamente encaminhados ao FDT.
      * 
      * @return 
      */
     public List<Concept> retrieveUnrevisableConcepts(){
-        List<Concept> conceitos = generateConcepts();
-        conceitos.removeAll(retrieveRevisableConcepts());
-        return conceitos;
+        List<Concept> todosConceitos = generateConcepts();
+        List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
+        
+        todosConceitos.removeAll(conceitosRevisaveis);
+        return todosConceitos;
     }
     
     /**
@@ -261,7 +263,7 @@ public class ForteInputGenerator {
             rel.setNome(objProp.getLocalName());
 
             //Criar um Iterador em cima dos valores em RANGE
-            //Caso haja mais de um, todos ser√£o adicionados ao Relationship
+            //Caso haja mais de um, todos ser„o adicionados ao Relationship
             ExtendedIterator itRanges = objProp.listRange();
             List<String> termosRange = new ArrayList<String>();
             while(itRanges.hasNext()){
@@ -291,13 +293,13 @@ public class ForteInputGenerator {
     }
 
     /**
-     * <p>M√©todo para gera√ß√£o dos exemplos positivos da teoria a partir das
+     * <p>MÈtodo para geraÁ„o dos exemplos positivos da teoria a partir das
      * instancias fornecidas pela ontologia.
      * <br />
      * Exemplos podem ser gerados a partir de axiomas, relacionamentos (restrictions
      * do conceito) e datatypes (atributos do conceito).
      *
-     * <br />Heur√≠sticas Adotadas:
+     * <br />HeurÌsticas Adotadas:
      * <li>
      * <ol>para cada instancia recuperar o nome de sua classe e seu LocalName </ol>
      * <ol>para cada instancia recuperar seus objectProperties e gerar exemplo com
@@ -308,17 +310,17 @@ public class ForteInputGenerator {
      * @return List<IExample>
      */
     public List<IExample> generatePositiveExamples(){
-        //TODO avisar na monografia que o sistema deve ser utilizado em ontologias concisas, pois removera brechas para instancias ainda n√£o inseridas devido a especializa√ß√£o
+        //TODO avisar na monografia que o sistema deve ser utilizado em ontologias concisas, pois removera brechas para instancias ainda n„o inseridas devido a especializaÁ„o
         List<IExample> conjExemplosPositivos = new ArrayList<IExample>();
         Set<Individual> conjIndividuals = parser.listarInstancias();
         
-        //verificar se existem instancias, n√£o existindo acaba o processamento
+        //verificar se existem instancias, n„o existindo acaba o processamento
         if(conjIndividuals.isEmpty()){
             return null;
         }
 
         //////////////////////////////////////
-        //          Heur√≠stica 1            //
+        //          HeurÌstica 1            //
         //////////////////////////////////////
         for(Individual i : conjIndividuals){
             ConceptExample exPosConcept = new ConceptExample();
@@ -328,7 +330,7 @@ public class ForteInputGenerator {
         }
 
         //////////////////////////////////////
-        //          Heur√≠stica 2            //
+        //          HeurÌstica 2            //
         //////////////////////////////////////
         Set<ObjectProperty> listaOP = parser.listarObjectProperties();
         for(Individual i : conjIndividuals){
@@ -354,7 +356,7 @@ public class ForteInputGenerator {
 
     /**
      * A partir das Class identificar os DatatypeProperty e gerar exemplos positivos
-     * (necessita de p√≥s intera√ß√£o com usu√°rio para preenchimento
+     * (necessita de p√≥s interaÁ„o com usu·rio para preenchimento
      *
      * @return List<ObjectAttribute>
      */
@@ -376,21 +378,21 @@ public class ForteInputGenerator {
              conjAtributos.add(atributo);
             }
         }
-        //TODO ainda n√£o tem os poss√≠veis valores. Talves retirar possibilidades das instancias ou das descri√ß√µes dos  DatatypeProperties na OWL
+        //TODO ainda n„o tem os possÌveis valores. Talves retirar possibilidades das instancias ou das descriÁ√µes dos  DatatypeProperties na OWL
         return conjAtributos;
     }
 
     /**
-     * <p>M√©todo para gera√ß√£o dos exemplos negativos da teoria a partir das instancias da
-     * ontologia com o aux√≠lio de axiomas das classes.
+     * <p>MÈtodo para geraÁ„o dos exemplos negativos da teoria a partir das instancias da
+     * ontologia com o auxÌlio de axiomas das classes.
      * <br />
      *
-     * <br />Heur√≠sticas Adotadas:
+     * <br />HeurÌsticas Adotadas:
      * <li>
      * <ol>Recuperar classes que possuem o axioma <b>disjointWith</b>, procurar instancias das
-     * classes disjuntas e utiliz√°-las para gerar exemplos das classes disjuntas. OBS: ao encontrar
-     * uma disjun√ß√£o gerar exemplos negativos para as duas classes disjuntas.</ol>
-     * <ol>Todas as instancias que n√£o forem da classe X devem servir para gerar exemplos
+     * classes disjuntas e utiliz·-las para gerar exemplos das classes disjuntas. OBS: ao encontrar
+     * uma disjunÁ„o gerar exemplos negativos para as duas classes disjuntas.</ol>
+     * <ol>Todas as instancias que n„o forem da classe X devem servir para gerar exemplos
      * negativos da classe X.</ol>
      * </li>
      * </p>
@@ -402,13 +404,13 @@ public class ForteInputGenerator {
         Set<Individual> conjIndividuals = parser.listarInstancias();
         Set<OntClass> conjClasses = parser.listarClasses();
 
-        //verificar se existem instancias, n√£o existindo acaba o processamento
+        //verificar se existem instancias, n„o existindo acaba o processamento
         if(conjIndividuals.isEmpty()){
             return null;
         }
 
         //////////////////////////////////////
-        //          Heur√≠stica 1            //
+        //          HeurÌstica 1            //
         //////////////////////////////////////
 //        for(OntClass classeOriginal : conjClasses){
 //            if(classeOriginal.getDisjointWith() != null){
@@ -428,9 +430,9 @@ public class ForteInputGenerator {
 //        }
 
         //////////////////////////////////////
-        //          Heur√≠stica 2            //
+        //          HeurÌstica 2            //
         //////////////////////////////////////
-        //TODO verificar se a gera√ß√£o de exemplos negativos de subclasses n√£o √© um erro
+        //TODO verificar se a geraÁ„o de exemplos negativos de subclasses n„o È um erro
         for(OntClass classeOriginal : conjClasses){
             Set<Individual> individualsPos = parser.listarInstancias(classeOriginal);
             Set<Individual> individualsNeg = conjIndividuals;
@@ -499,8 +501,8 @@ public class ForteInputGenerator {
     
     /** 
      * Gera o arquivo FDT, que informa ao FORTE o conhecimento fundamental sobre a teoria
-     * que ser√° revisada. O arquivo FDT dever√° comportar conceitos tidos como n√£o
-     * revis√°veis e todas as regras originadas de Relacionamentos (Relationship).
+     * que ser· revisada. O arquivo FDT dever· comportar conceitos tidos como n„o
+     * revis·veis e todas as regras originadas de Relacionamentos (Relationship).
      * 
      * @throws IOException 
      */
@@ -532,9 +534,9 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Gera o arquivo DAT, que informa ao FORTE os dados b√°sicos, como inst√¢ncias
-     * positivas, inst√¢ncias negativas, fatos, quais regras s√£o TOP_LEVEL e quais
-     * s√£o INTERMEDIATE, etc.
+     * Gera o arquivo DAT, que informa ao FORTE os dados b·sicos, como inst‚ncias
+     * positivas, inst‚ncias negativas, fatos, quais regras s„o TOP_LEVEL e quais
+     * s„o INTERMEDIATE, etc.
      * 
      * @throws IOException 
      */
@@ -545,8 +547,8 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Gera o arquivo DOM, que informa ao FORTE os arquivos que devem ser inclu√≠dos
-     * na execu√ß√£o do sistema para descrever o dom√≠nio da teoria.
+     * Gera o arquivo DOM, que informa ao FORTE os arquivos que devem ser incluÌdos
+     * na execuÁ„o do sistema para descrever o domÌnio da teoria.
      * 
      * @throws IOException 
      */
@@ -562,14 +564,11 @@ public class ForteInputGenerator {
 
 
     /*********************************************************
-     **                 M√©todos Auxiliares                  **
+     **                 MÈtodos Auxiliares                  **
      *********************************************************/
 
-
-
-
     /**
-     * M√©todo auxiliar para recuperar um ConceptRestriction a partir de um objeto
+     * MÈtodo auxiliar para recuperar um ConceptRestriction a partir de um objeto
      * Restriction da API do JENA.
      *
      * @param restriction
@@ -612,7 +611,7 @@ public class ForteInputGenerator {
     @SuppressWarnings("rawtypes")
 	private List<String> recuperarDomainsDatatype(DatatypeProperty datatype) {
         //Criar um Iterador em cima dos valores em DOMAIN
-        //Caso haja mais de um, todos ser√£o adicionados ao Relationship
+        //Caso haja mais de um, todos ser„o adicionados ao Relationship
         ExtendedIterator itDomains = datatype.listDomain();
         List<String> termosDomain = new ArrayList<String>();
         while(itDomains.hasNext()){
@@ -635,10 +634,10 @@ public class ForteInputGenerator {
     }
 
     /**
-     * <p>M√©todo auxiliar para ajudar na cria√ß√£o de exemplos negativos atrav√©s do uso
-     * do axioma de classe DisjointWith. Dois par√¢metros s√£o recebidos, a classeOriginal,
+     * <p>MÈtodo auxiliar para ajudar na criaÁ„o de exemplos negativos atravÈs do uso
+     * do axioma de classe DisjointWith. Dois par‚metros s„o recebidos, a classeOriginal,
      * ou seja, aquela sobre a qual se deseja gerar exemplos negativos e a classeDisjunta,
-     * ou seja, a classe sobre a qual ser√£o recuperadas as inst√¢ncias que ser√£o utilizadas
+     * ou seja, a classe sobre a qual ser„o recuperadas as inst‚ncias que ser„o utilizadas
      * para criar os exemplos negativos da classeOriginal.</p>
      * 
      * @param classeOriginal
