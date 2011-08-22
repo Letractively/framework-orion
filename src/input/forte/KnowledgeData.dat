@@ -1,1 +1,8 @@
-texto a ser inserido
+top_level_predicates([Ex_Jogador(Jogador), Apelido_Time(Apelido), Presidente(Funcionario), Membro_Comissao_Tecnica(Funcionario)]).
+
+intermediate_predicates([Funcionario(Pessoa), Jogador(Pessoa)]).
+
+strata([]).
+
+shielded([Tecnico(_), Titular(_), Apelido_Pessoa(_), Apelido_Torcida(_), Funcionario(_), Jogador(_), Torcedor(_)]).
+

@@ -11,7 +11,8 @@ package br.uniriotec.orion.view;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    @SuppressWarnings("unused")
+	public static void main(String[] args) {
         OntoForteUI userInterface = new OntoForteUI();
     }
 

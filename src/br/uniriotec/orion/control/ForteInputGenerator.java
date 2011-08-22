@@ -77,7 +77,6 @@ public class ForteInputGenerator {
                 ConceptAttribute atrib = new ConceptAttribute();
                 atrib.setNomeAtributo(datatype.getLocalName());
                 atrib.setTipoRange(recuperarDomainsDatatype(datatype));
-                //TODO Os atributos ainda não tem valores definidos, necessária
                 //interação com o usuário
                 tmpConcept.addAttribute(atrib);
             }
@@ -125,7 +124,6 @@ public class ForteInputGenerator {
                     aux = it.next();
 
                     //Criação do conceito negativo
-                    //TODO Não revisar este conceito
                     Concept conceitoNeg = new Concept();
                     ConceptAxiom axiomaNeg = new ConceptAxiom();
                     axiomaNeg.setNome("subClassOf");
@@ -432,7 +430,6 @@ public class ForteInputGenerator {
         //////////////////////////////////////
         //          Heurística 2            //
         //////////////////////////////////////
-        //TODO verificar se a geração de exemplos negativos de subclasses não é um erro
         for(OntClass classeOriginal : conjClasses){
             Set<Individual> individualsPos = parser.listarInstancias(classeOriginal);
             Set<Individual> individualsNeg = conjIndividuals;
@@ -452,38 +449,55 @@ public class ForteInputGenerator {
     }
 
     /**
-     * <p>method responsible for generating the top_level_predicates
-     * in th .DAT file</p>
+     * <p>Método responsável por gerar os top_level_predicates no arquivo .DAT.
+     * Um predicado é top_level quando NÃO aparece no corpo de nenhuma outra regra.
+     * Predicados que aparecem em corpo de regra são intermediate.</p>
      */
-    public String generateTopLevelPredicates(){
-
-        Set<ObjectProperty> conjuntoOP = parser.listarObjectProperties();
-
-        String topLevelPredicates = "top_level_predicates([";
-
-        int cont = 0;
-        for(ObjectProperty prop : conjuntoOP){
-            cont++;
-
-            String regra;
-
-            String about = prop.getLocalName();
-            String domain = prop.getDomain().getLocalName();
-            String range = prop.getRange().getLocalName();
-
-            regra = about + "(" + domain + "," + range + ")";
-            topLevelPredicates += regra;
-
-            if(cont != conjuntoOP.size()){
-                topLevelPredicates += ", ";
-            }else{
-                topLevelPredicates += "]).";
-            }
-        }
-
-        return topLevelPredicates;
+    public List<Concept> generateTopLevelConcepts(){
+    	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
+    	List<Concept> topLevel = new ArrayList<Concept>();
+    	
+    	for(Concept cTestado : conceitosRevisaveis){
+    		boolean ehCorpoDeRegra = false;
+    		for(Concept cAux : conceitosRevisaveis){
+    			int qtdCharNome = cAux.getNome().length();
+    			String corpoConceptTestado = cAux.toString().substring(qtdCharNome, cAux.toString().length());
+    			if(corpoConceptTestado.contains(" "+cTestado.getNome()+"(")){
+    				ehCorpoDeRegra = true;
+    				break;
+    			}
+    		}
+    		if(ehCorpoDeRegra == false){
+    			topLevel.add(cTestado);
+    		}
+    	}
+    	
+    	return topLevel;
     }
-
+    
+    /**
+     * <p>Método responsável por gerar os intermediate_predicates no arquivo .DAT.
+     * Um predicado é intermediate quando aparece no corpo de outra regra.</p>
+     */
+    public List<Concept> generateIntermediateConcepts(){
+    	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
+    	List<Concept> topLevel = generateTopLevelConcepts();
+    	List<Concept> intermediate = null;
+    	
+    	intermediate = conceitosRevisaveis;
+    	intermediate.removeAll(topLevel);
+    	
+    	return intermediate;
+    }
+    /**
+     * Recuperar todos os conceitos filhos de Thing e gerar fatos com base em 
+     * suas instancias.
+     * Recuperar todos os exemplos de Object Properties
+     */
+    public List<IExample> generateFacts(){
+    	return new ArrayList<IExample>();
+    }
+    
     /**
      * Generates the ontology rules and insert them on the .THY file
      * 
@@ -494,6 +508,7 @@ public class ForteInputGenerator {
         List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
         BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryRules.thy"));
         for(Concept c : conceitosRevisaveis){
+        	//TODO verificar se o predicado do corpo pertence ao FDT e inserir "fdt:"
             writter.append(c.toString()+"\n");
         }
         writter.flush();
@@ -503,22 +518,37 @@ public class ForteInputGenerator {
      * Gera o arquivo FDT, que informa ao FORTE o conhecimento fundamental sobre a teoria
      * que será revisada. O arquivo FDT deverá comportar conceitos tidos como não
      * revisáveis e todas as regras originadas de Relacionamentos (Relationship).
+     * Algumas regras revisáveis podem ser excluidas da revisão pelo usuário, neste caso
+     * devem ser adicionadas ao FDT.
      * 
      * @throws IOException 
      */
     public void generateFundamentalTheory(List<Concept> rulesForRevision) throws IOException{
         List<Concept> conceitosNaoRevisaveis = retrieveUnrevisableConcepts();
+        List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
         List<Relationship> relacionamentos = generateRelationships();
+        
+        //Lista de conceitos revisáveis que o usuário optou por não revisar
+        List<Concept> conceitosRevisaveisExcluidos = conceitosRevisaveis;
+        conceitosRevisaveisExcluidos.removeAll(rulesForRevision);
         
         String moduloFDT = ":- module(fdt, [";
         String conceitosFDT = "\n\n";
         String relacionamentosFDT = "\n\n";
         
+        //Escrever conceitos Não revisáveis
         for(Concept c : conceitosNaoRevisaveis){
             conceitosFDT += c.getNome() + "(X) :- example(" + c.getNome() + "(X)" + ").\n";
             moduloFDT += c.getNome() + "/1, ";
         }
         
+        //Escrever Conceitos revisaveis excluidos da revisão
+        for(Concept c : conceitosRevisaveisExcluidos){
+            conceitosFDT += c.getNome() + "(X) :- example(" + c.getNome() + "(X)" + ").\n";
+            moduloFDT += c.getNome() + "/1, ";
+        }
+        
+        //Escrever relacionamentos
         for(Relationship r : relacionamentos){
             relacionamentosFDT += r.getNome() + "(X,Y) :- example(" + r.getNome() + "(X,Y)" + ").\n";
             moduloFDT += r.getNome() + "/2, ";
@@ -534,15 +564,87 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Gera o arquivo DAT, que informa ao FORTE os dados básicos, como instâncias
-     * positivas, instâncias negativas, fatos, quais regras são TOP_LEVEL e quais
-     * são INTERMEDIATE, etc.
+     * Gera o arquivo DAT, que informa ao FORTE os seguintes dados básicos:
+     *  - top_level_predicates;
+     *  - intermediate_predicates;
+     *  - strata (deixar em branco);
+     *  - shielded (contem todos os predicados da teoria que não serão revisados);
+     *  - object_attributes;
+     *  - object_relations (definição dos fatos);
+     *  - language_bias (usando padrão);
+     *  - example (positivo, negativo, Objects, fatos
      * 
      * @throws IOException 
      */
     public void generateDataFile(List<Concept> rulesForRevision) throws IOException{
-        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/KnowledgeData.dat"));
-        writter.append("texto a ser inserido");
+        List<Concept> topLevelConcepts = generateTopLevelConcepts();
+        topLevelConcepts.retainAll(rulesForRevision);
+    	List<Concept> intermediateConcepts = generateIntermediateConcepts();
+    	List<IExample> fatos = generateFacts();
+    	
+    	List<String> topLevelPredicates = new ArrayList<String>();
+    	List<String> intermediatePredicates = new ArrayList<String>();
+    	
+    	//Recuperar predicados de top_level e intermediate.
+    	for(Concept c: topLevelConcepts){
+    		topLevelPredicates.add(c.getNome()+ "(" + c.getAxiomas().get(0).getValor() + ")");
+    	}
+    	for(Concept c: intermediateConcepts){
+    		intermediatePredicates.add(c.getNome()+ "(" + c.getAxiomas().get(0).getValor() + ")");
+    	}
+    	
+    	/*======================================+
+    	 * 		Preparar Texto para escrita		*
+    	 *======================================*/
+    	
+    	//Preparar Top Level Predicate
+    	String top_level = "top_level_predicates([";
+    	for(String s : topLevelPredicates){
+    		top_level += s+", ";
+        }
+    	top_level = top_level.substring(0, top_level.length()-2) + "]).";
+    	
+    	//Preparar Intermediate Predicate
+    	String intermediate = "intermediate_predicates([";
+    	for(String s : intermediatePredicates){
+    		intermediate += s+", ";
+        }
+    	intermediate = intermediate.substring(0, intermediate.length()-2) + "]).";
+
+    	//Preparar Strata
+    	String strata = "strata([]).";
+    	
+    	//Preparar Shielded
+    	String shielded = "shielded([";
+    	List<Concept> conjuntoRegrasNaoRevisadas = retrieveRevisableConcepts();
+    	conjuntoRegrasNaoRevisadas.removeAll(rulesForRevision);
+    	for(Concept c : conjuntoRegrasNaoRevisadas){
+    		shielded += c.getNome()+"(_), ";
+    	}
+    	shielded = shielded.substring(0, shielded.length()-2) + "]).";
+    	
+    	//Preparar Object Attribute
+    	String objectAttr = "object_attributes([]).";
+    	
+    	//Preparar Object Relations
+    	//TODO conferir se a composição do elemento está certa (é pra entrar OP mesmo?)
+    	String objectRel = "object_relations([";
+    	List<Relationship> relacionamentos = generateRelationships();
+    	for(Relationship r : relacionamentos){
+    		objectRel += r+", ";
+    	}
+    	objectRel = objectRel.substring(0, objectRel.length()-2) + "]).";
+    	
+    	
+    	//Realizar a escrita em arquivo
+    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/KnowledgeData.dat"));
+        writter.append(top_level+"\n\n");
+        writter.append(intermediate+"\n\n");
+        writter.append(strata+"\n\n");
+        writter.append(shielded+"\n\n");
+        writter.append(objectAttr);
+        writter.append("language_bias([depth_limit(5), use_attr, use_relations, " +
+        		"use_theory, use_built_in, relation_tuning(highly_relational)]).");
         writter.flush();
     }
     
