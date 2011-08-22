@@ -32,12 +32,12 @@ public class OntoForteUI {
          ** Simular que os 4 primeiros conceitos ** 
          ** foram escolhidos para revisao        **
          ******************************************/
-        List<Concept> revisar = new ArrayList<Concept>();
+        List<Concept> conceitosParaRevisao = new ArrayList<Concept>();
         for(int i=0; i<4; i++){
-            revisar.add(conceitosRevisaveis.get(i));
+            conceitosParaRevisao.add(conceitosRevisaveis.get(i));
         }
         System.out.println("\n=== Regras escolhidas para revisao ===");
-        for(Concept c : revisar){
+        for(Concept c : conceitosParaRevisao){
             System.out.println(c);
         }
         
@@ -47,8 +47,8 @@ public class OntoForteUI {
         try {
             gerador.generateDomainKnowledgeFile();
             gerador.generateTheoryRules();
-            gerador.generateFundamentalTheory(revisar);
-            gerador.generateDataFile(revisar);
+            gerador.generateFundamentalTheory(conceitosParaRevisao);
+            gerador.generateDataFile(conceitosParaRevisao);
         } catch (IOException ex) {
             Logger.getLogger(OntoForteUI.class.getName()).log(Level.SEVERE, null, ex);
         }

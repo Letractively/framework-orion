@@ -17,8 +17,8 @@ public class Concept extends ForteResource{
     private List<ConceptRestriction> restrictions = null;
 
     /**
-     * Sobrecargasdo m√©todo toString para for√ßar a escrita do Conceito como
-     * um conceito do FORTE (Cl√°usula Horn)
+     * Sobrecargasdo mÈtodo toString para forÁar a escrita do Conceito como
+     * um conceito do FORTE (Cl·usula de Horn)
      *
      * @return texto - String
      */
@@ -43,7 +43,7 @@ public class Concept extends ForteResource{
 
                 //Se for um axioma equivalentClass
                 if(axioma.getNome().equals("equivalentClass")){
-                    //TODO adicionar axiomas equivalentClass √† cl√°usula Horn
+                    //TODO adicionar axiomas equivalentClass √† cl·usula Horn
                 }
             }
         }
@@ -77,7 +77,7 @@ public class Concept extends ForteResource{
             }
         }
 
-        //Lembrar de tirar a √∫ltima v√≠rgula
+        //Lembrar de tirar a ˙ltima vÌrgula
         int tamanhoTexto = texto.length();
         texto = texto.substring(0, tamanhoTexto-2);
         texto += ".";
@@ -131,7 +131,7 @@ public class Concept extends ForteResource{
      * @return boolean
      */
     public boolean addConceptAxiom(ConceptAxiom axioma){
-        //Verifica se o mapa est√° instanciado, se n√£o estiver, instancia-o
+        //Verifica se o mapa est· instanciado, se n„o estiver, instancia-o
         if(axiomas == null){
             axiomas = new ArrayList<ConceptAxiom>();
         }
@@ -141,13 +141,13 @@ public class Concept extends ForteResource{
     }
 
     /**
-     * Adiciona uma restri√ß√£o ao conceito.
+     * Adiciona uma restriÁ„o ao conceito.
      *
      * @param restriction
      * @return boolean
      */
     public boolean addConceptRestriction(ConceptRestriction restricao){
-        //Verifica se o mapa est√° instanciado, se n√£o estiver, instancia-o
+        //Verifica se o mapa est· instanciado, se n„o estiver, instancia-o
         if(restrictions == null){
             restrictions = new ArrayList<ConceptRestriction>();
         }

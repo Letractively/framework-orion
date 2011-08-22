@@ -3,24 +3,12 @@
  Próximos passos:
 ==================
 
-- Primeiro nível da arvore vira "corte" (Pessoa, Apelido, Torcida) perdem regra e
-    todos os exemplos vão para o conjunto de fatos.
-- "Thing" deve entrar com tag "example" no FDT.
-- O usuário deve escolher as regras que serão refinadas e todas as outras vão para o FDT
+- INserir "fdt:" nos examples do arquivo .FDT
+- Como definir a cabe�a do OP no Object_relations?
 - Exemplos de OP viram fatos (Facts) no DAT.
-- Regras "not" devem ir para o FDT (indiscutivelmente)
 - Exemplos positivos de regras não revisadas vão para o Facts.
-- No FDT o "module" indica a aridade de uma regra (qtd de parametros)
-- Regras que fizerem parte do corpo de outra regra devem ir para o INTERMEDIATE.
-- Regras que não fazem parte do corpo de outra regra vai para o TOP_LEVEL
 - Exemplos de regras do intermediate a serem revisadas devem ser retiradas do Facts
     e ser posta no conjunto de exemplos+
-
-- Ao tirar uma regra do conjunto a ser revisado:
-    - Se for uma regra do TOP_LEVEL sai do conjunto TOP_LEVEL e entra no FDT.
-    - Se for uma regra do INTEMEDIATE fica neste conjunto e é replicada no FDT.
-
-- Datatype Properties se tornaram inuteis.
 
  
 
