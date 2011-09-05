@@ -1,10 +1,8 @@
 
 ==================
- Próximos passos:
+ Pr�ximos passos:
 ==================
 
-- INserir "fdt:" nos examples do arquivo .FDT
-- Como definir a cabe�a do OP no Object_relations?
 - Exemplos de OP viram fatos (Facts) no DAT.
 - Exemplos positivos de regras não revisadas vão para o Facts.
 - Exemplos de regras do intermediate a serem revisadas devem ser retiradas do Facts
@@ -15,6 +13,4 @@
 ==================
  Passos Futuros:
 ==================
-- fazer a interação com o usuario e preencher o que for preciso
-- Dentre os conceitos revisáveis o usuario deverá escolher quais farão parte do fdt
-- ver o necessário para gerar FDT e THY
+- 
