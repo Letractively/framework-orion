@@ -46,7 +46,7 @@ public class OntoForteUI {
          **************************************/
         try {
             gerador.generateDomainKnowledgeFile();
-            gerador.generateTheoryRules();
+            gerador.generateTheoryRules(conceitosParaRevisao);
             gerador.generateFundamentalTheory(conceitosParaRevisao);
             gerador.generateDataFile(conceitosParaRevisao);
         } catch (IOException ex) {

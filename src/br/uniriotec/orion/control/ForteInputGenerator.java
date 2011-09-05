@@ -1,6 +1,15 @@
 
 package br.uniriotec.orion.control;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import br.uniriotec.orion.model.forte.resources.Concept;
 import br.uniriotec.orion.model.forte.resources.ConceptAttribute;
 import br.uniriotec.orion.model.forte.resources.ConceptAxiom;
@@ -10,6 +19,7 @@ import br.uniriotec.orion.model.forte.resources.IExample;
 import br.uniriotec.orion.model.forte.resources.ObjectAttribute;
 import br.uniriotec.orion.model.forte.resources.Relationship;
 import br.uniriotec.orion.model.forte.resources.RelationshipExample;
+
 import com.hp.hpl.jena.ontology.CardinalityRestriction;
 import com.hp.hpl.jena.ontology.DatatypeProperty;
 import com.hp.hpl.jena.ontology.HasValueRestriction;
@@ -24,13 +34,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * <p>Responsible for generate the inputs used by the Theory revision system.
@@ -64,7 +67,7 @@ public class ForteInputGenerator {
             //Instanciar um Concept
             Concept tmpConcept = new Concept();
             //Adicionar o nome do conceito
-            tmpConcept.setNome(ontClass.getLocalName());
+            tmpConcept.setNome(lowerFirstChar(ontClass.getLocalName()));
             //recuperar todos os Datatype properties utilizados pela OntClass
             conjDatatypes = parser.listarDatatypeProperties(ontClass);
             Iterator<DatatypeProperty> iterator = conjDatatypes.iterator();
@@ -75,7 +78,7 @@ public class ForteInputGenerator {
             while(iterator.hasNext()){
                 DatatypeProperty datatype = iterator.next();
                 ConceptAttribute atrib = new ConceptAttribute();
-                atrib.setNomeAtributo(datatype.getLocalName());
+                atrib.setNomeAtributo(lowerFirstChar(datatype.getLocalName()));
                 atrib.setTipoRange(recuperarDomainsDatatype(datatype));
                 //interação com o usuário
                 tmpConcept.addAttribute(atrib);
@@ -96,7 +99,7 @@ public class ForteInputGenerator {
                    if(aux.getLocalName() != null){ //tem LocalName, referencia a classe pai
                        ConceptAxiom axioma = new ConceptAxiom();
                        axioma.setNome("subClassOf");
-                       axioma.setValor(aux.getLocalName());
+                       axioma.setValor(lowerFirstChar(aux.getLocalName()));
                        tmpConcept.addConceptAxiom(axioma);
                    }else{ //é um restriction
                        Restriction restriction = aux.asRestriction();
@@ -127,8 +130,8 @@ public class ForteInputGenerator {
                     Concept conceitoNeg = new Concept();
                     ConceptAxiom axiomaNeg = new ConceptAxiom();
                     axiomaNeg.setNome("subClassOf");
-                    axiomaNeg.setValor("not "+aux.getLocalName());
-                    conceitoNeg.setNome("nao"+aux.getLocalName());
+                    axiomaNeg.setValor("not "+lowerFirstChar(aux.getLocalName()));
+                    conceitoNeg.setNome("nao"+lowerFirstChar(aux.getLocalName()));
                     conceitoNeg.addConceptAxiom(axiomaNeg);
 
                     //Adiciona o conceito negativo Ã  lista de conceitos
@@ -172,7 +175,8 @@ public class ForteInputGenerator {
         return conceptsList;
     }
     
-    /**
+    
+	/**
      * Método para auxiliar a retornar somente os conceitos da ontologia que são
      * revisáveis. O método recupera a lista gerada pelo método "generateConceps"
      * e retira aqueles que foram criados como auxílio, possuindo o prefixo "nao"
@@ -499,13 +503,19 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Generates the ontology rules and insert them on the .THY file
+     * Gera o arquivo THY, que comporta as regras que compõe a teoria
      * 
      * @param rulesForRevision
      * @throws IOException 
      */
-    public void generateTheoryRules() throws IOException{
-        List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
+    public void generateTheoryRules(List<Concept> rulesForRevision) throws IOException{
+        /*
+         *-Insere no THY só os predicados que forem revisados?
+         *todo predicado usado no corpo de uma regra revisada que não for pertencente ao conjunto
+         *"rulesForRevision" deverá estar no FDT, portanto recebe um "fdt:" como prefixo
+         */
+    	
+    	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
         BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryRules.thy"));
         for(Concept c : conceitosRevisaveis){
         	//TODO verificar se o predicado do corpo pertence ao FDT e inserir "fdt:"
@@ -584,13 +594,19 @@ public class ForteInputGenerator {
     	
     	List<String> topLevelPredicates = new ArrayList<String>();
     	List<String> intermediatePredicates = new ArrayList<String>();
+    	Set<String> variaveis = new HashSet<String>();
     	
     	//Recuperar predicados de top_level e intermediate.
+    	//recupera o nome do predicado e a sua superclasse, gera-se entao uma variavel
     	for(Concept c: topLevelConcepts){
-    		topLevelPredicates.add(c.getNome()+ "(" + c.getAxiomas().get(0).getValor() + ")");
+    		String variavel = "var"+c.getAxiomas().get(0).getValor();
+    		topLevelPredicates.add(c.getNome()+ "(" + variavel + ")");
+    		variaveis.add(variavel);
     	}
     	for(Concept c: intermediateConcepts){
-    		intermediatePredicates.add(c.getNome()+ "(" + c.getAxiomas().get(0).getValor() + ")");
+    		String variavel = "var"+c.getAxiomas().get(0).getValor();
+    		intermediatePredicates.add(c.getNome()+ "(" + variavel + ")");
+    		variaveis.add(variavel);
     	}
     	
     	/*======================================+
@@ -623,17 +639,25 @@ public class ForteInputGenerator {
     	}
     	shielded = shielded.substring(0, shielded.length()-2) + "]).";
     	
-    	//Preparar Object Attribute
-    	String objectAttr = "object_attributes([]).";
-    	
     	//Preparar Object Relations
     	//TODO conferir se a composição do elemento está certa (é pra entrar OP mesmo?)
     	String objectRel = "object_relations([";
     	List<Relationship> relacionamentos = generateRelationships();
     	for(Relationship r : relacionamentos){
-    		objectRel += r+", ";
+    		String v1 = "var" + lowerFirstChar(r.getPrimeiroTermo().get(0));
+    		String v2 = "var" + lowerFirstChar(r.getSegundoTermo());
+    		objectRel += r.getNome()+ "(" + v1 + "," + v2 + "), ";
+    		variaveis.add(v1);
+    		variaveis.add(v2);
     	}
     	objectRel = objectRel.substring(0, objectRel.length()-2) + "]).";
+    	
+    	//Preparar Object Attribute
+    	String objectAttr = "object_attributes([";
+    	for(String s : variaveis){
+    		objectAttr += s+"([]), ";
+    	}
+    	objectAttr = objectAttr.substring(0, objectAttr.length()-2) + "]).";
     	
     	
     	//Realizar a escrita em arquivo
@@ -642,7 +666,8 @@ public class ForteInputGenerator {
         writter.append(intermediate+"\n\n");
         writter.append(strata+"\n\n");
         writter.append(shielded+"\n\n");
-        writter.append(objectAttr);
+        writter.append(objectAttr+"\n\n");
+        writter.append(objectRel+"\n\n");
         writter.append("language_bias([depth_limit(5), use_attr, use_relations, " +
         		"use_theory, use_built_in, relation_tuning(highly_relational)]).");
         writter.flush();
@@ -771,5 +796,17 @@ public class ForteInputGenerator {
 
         return listaExemplosNeg;
     }
+    
+    /**
+     * Método para transformar o primeiro caracter de uma string em minusculo
+     * 
+     * @param s
+     * @return lowerCaseFirstCharString
+     */
+    private String lowerFirstChar(String s) {
+		String firstChar = s.substring(0, 1).toLowerCase();
+		String complemento = s.substring(1, s.length());
+		return firstChar+complemento;
+	}
 
 }
