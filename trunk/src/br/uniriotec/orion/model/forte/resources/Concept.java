@@ -18,7 +18,10 @@ public class Concept extends ForteResource{
 
     /**
      * Sobrecargasdo método toString para forçar a escrita do Conceito como
-     * um conceito do FORTE (Cláusula de Horn)
+     * um conceito do FORTE (Cláusula de Horn). OBS: como neste ponto ainda
+     * não é possível saber quem está no FDT e quem será revisado, ainda não 
+     * é possível inserir o prefixo "fdt:" para os predicados que estão
+     * definidos no arquivo FDT.
      *
      * @return texto - String
      */
