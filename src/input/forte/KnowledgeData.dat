@@ -1,26 +1,13 @@
-top_level_predicates([ex_Jogador(varjogador), apelido_Time(varapelido), presidente(varfuncionario)]).
+top_level_predicates([ex_Jogador(varjogador), apelido_Time(varapelido), presidente(varfuncionario), membro_Comissao_Tecnica(varfuncionario), funcionario(varpessoa), jogador(varpessoa)]).
 
-intermediate_predicates([apelido(varthing), funcionario(varpessoa), jogador(varpessoa), pessoa(varthing)]).
+intermediate_predicates([funcionario(varpessoa), jogador(varpessoa)]).
 
 strata([]).
 
-shielded([ torcida(_), membro_Comissao_Tecnica(_), 
-			mascote(_), tecnico(_), titular(_), 
-			estadio(_), apelido_Pessoa(_), 
-			apelido_Torcida(_), funcionario(_), 
-			jogador(_), time(_), 
-			pessoa(_), patrocinador(_), 
-			torcedor(_)]).
+shielded([tecnico(_), titular(_), apelido_Pessoa(_), apelido_Torcida(_), torcedor(_)]).
 
-object_attributes([ varpresidente([]), vartorcedor([]), vartime([]), varestadio([]), varpessoa([]), 
-					vartorcida([]), varmascote([]), varapelido_Torcida([]), varthing([]), 
-					varmembro_Comissao_Tecnica([]), varapelido_Time([]), varpatrocinador([]), 
-					varfuncionario([]), varapelido_Pessoa([]), varapelido([]), varjogador([])]).
+object_attributes([varpresidente([]), vartorcedor([]), vartime([]), varestadio([]), varpessoa([]), vartorcida([]), varmascote([]), varapelido_Torcida([]), varmembro_Comissao_Tecnica([]), varapelido_Time([]), varpatrocinador([]), varfuncionario([]), varapelido_Pessoa([]), varapelido([]), varjogador([])]).
 
-object_relations([ referesePessoa(varapelido_Pessoa,varpessoa), refereseTorcida(varapelido_Torcida,vartorcida), 
-					comandaClube(varpresidente,vartime), pertenceTime(varestadio,vartime), 
-					refereseTime(varapelido_Time,vartime), torcePorTime(vartorcedor,vartime), 
-					trabalhaEm(varmembro_Comissao_Tecnica,vartime), simboliza(varmascote,vartime), 
-					jogaEmTime(varjogador,vartime), patrocina(varpatrocinador,vartime)]).
+object_relations([referesePessoa(varapelido_Pessoa,varpessoa), refereseTorcida(varapelido_Torcida,vartorcida), comandaClube(varpresidente,vartime), pertenceTime(varestadio,vartime), refereseTime(varapelido_Time,vartime), torcePorTime(vartorcedor,vartime), trabalhaEm(varmembro_Comissao_Tecnica,vartime), simboliza(varmascote,vartime), jogaEmTime(varjogador,vartime), patrocina(varpatrocinador,vartime)]).
 
 language_bias([depth_limit(5), use_attr, use_relations, use_theory, use_built_in, relation_tuning(highly_relational)]).

@@ -201,7 +201,7 @@ public class ForteInputGenerator {
                 }else{
                     for(ConceptAxiom ca : c.getAxiomas()){
                         //Se for subclasse de Thing não é revisavel
-                        if(ca.getNome().equals("subClassOf") && ca.getValor().equals("Thing")){
+                        if(ca.getNome().equals("subClassOf") && ca.getValor().equals("thing")){
                             conceitoRevisavel = false;
                         }else if(ca.getNome().equals("equivalentClass")){
                             conceitoRevisavel = false;
@@ -457,7 +457,7 @@ public class ForteInputGenerator {
      * Um predicado é top_level quando NÃO aparece no corpo de nenhuma outra regra.
      * Predicados que aparecem em corpo de regra são intermediate.</p>
      */
-    public List<Concept> generateTopLevelConcepts(){
+    public List<Concept> generatePossibleTopLevelPredicates(){
     	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
     	List<Concept> topLevel = new ArrayList<Concept>();
     	
@@ -483,9 +483,9 @@ public class ForteInputGenerator {
      * <p>Método responsável por gerar os intermediate_predicates no arquivo .DAT.
      * Um predicado é intermediate quando aparece no corpo de outra regra.</p>
      */
-    public List<Concept> generateIntermediateConcepts(){
+    public List<Concept> generateIntermediatePredicates(){
     	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
-    	List<Concept> topLevel = generateTopLevelConcepts();
+    	List<Concept> topLevel = generatePossibleTopLevelPredicates();
     	List<Concept> intermediate = null;
     	
     	intermediate = conceitosRevisaveis;
@@ -503,23 +503,61 @@ public class ForteInputGenerator {
     }
     
     /**
-     * Gera o arquivo THY, que comporta as regras que compõe a teoria
+     * Gera o arquivo THY, que comporta as regras que compõe a teoria. As regras do 
+     * arquivo THY são todas as regras que foram selecionadas pelo usuário para revisão
+     * somadas aos predicados identificados como "intermediate_predicates", ou seja, que
+     * são utilizados no corpo das regras selecionadas para revisão.
+     * 
+     * OBS: Predicados no corpo de regras que estão definidos no arquivo FDT receberão
+     *  o prefixo "fdt:".
      * 
      * @param rulesForRevision
      * @throws IOException 
      */
     public void generateTheoryRules(List<Concept> rulesForRevision) throws IOException{
-        /*
-         *-Insere no THY só os predicados que forem revisados?
-         *todo predicado usado no corpo de uma regra revisada que não for pertencente ao conjunto
-         *"rulesForRevision" deverá estar no FDT, portanto recebe um "fdt:" como prefixo
-         */
+    	List<Concept> conceitosRevisaveis = rulesForRevision;
+    	conceitosRevisaveis.addAll(generateIntermediatePredicates());
     	
-    	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
-        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryRules.thy"));
+    	//Criar lista com todos os predicados que não requisitam o prefixo "fdt:"
+    	List<String> cabecaPredicadosTHY = new ArrayList<String>();
+    	for(Concept c : conceitosRevisaveis){
+    		cabecaPredicadosTHY.add(c.getNome()+"(A)");
+    	}
+    	
+    	//Preparar arquivo THY para escrita
+    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryRules.thy"));
+    	
         for(Concept c : conceitosRevisaveis){
-        	//TODO verificar se o predicado do corpo pertence ao FDT e inserir "fdt:"
-            writter.append(c.toString()+"\n");
+        	/* verificar se os predicados no corpo das regras fazem parte do "rulesForRevision"
+        	 * ou do intermediatePredicates, senão, inserir "fdt:", pois o predicado se encontra
+        	 * definido no arquivo FDT.
+        	 */
+        	int posSinalImplicacao = c.toString().indexOf(":-");
+        	String cabecaRegra = c.toString().substring(0, posSinalImplicacao-1);
+        	String corpoRegra = c.toString().substring(posSinalImplicacao+3, c.toString().length());
+        	String corpoRegraPrefixado = "";
+        	
+        	String[] arrayPredicadosCorpoRegra = corpoRegra.split(", ");
+        	
+        	for(String s : arrayPredicadosCorpoRegra){
+        		boolean isCabeca = false;
+        		for(String cabecaPred : cabecaPredicadosTHY){
+        			if(cabecaPred.equals(s)){
+        				isCabeca = true;
+            		}	
+        		}
+        		if(isCabeca){
+        			corpoRegraPrefixado += s+"; ";
+        		}else{
+        			corpoRegraPrefixado += "fdt:"+s+", ";
+        		}	
+        	}
+        	
+        	//trocar ultimo ", " por "."
+        	corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2);
+        	
+        	//Escrever a regra no arquivo
+            writter.append(cabecaRegra+" :- "+corpoRegraPrefixado+"\n");
         }
         writter.flush();
     }
@@ -554,13 +592,13 @@ public class ForteInputGenerator {
         
         //Escrever Conceitos revisaveis excluidos da revisão
         for(Concept c : conceitosRevisaveisExcluidos){
-            conceitosFDT += c.getNome() + "(X) :- example(" + c.getNome() + "(X)" + ").\n";
+            conceitosFDT += c.toString()+"\n";
             moduloFDT += c.getNome() + "/1, ";
         }
         
         //Escrever relacionamentos
         for(Relationship r : relacionamentos){
-            relacionamentosFDT += r.getNome() + "(X,Y) :- example(" + r.getNome() + "(X,Y)" + ").\n";
+            relacionamentosFDT += r.toString()+".\n";
             moduloFDT += r.getNome() + "/2, ";
         }
         
@@ -587,9 +625,8 @@ public class ForteInputGenerator {
      * @throws IOException 
      */
     public void generateDataFile(List<Concept> rulesForRevision) throws IOException{
-        List<Concept> topLevelConcepts = generateTopLevelConcepts();
-        topLevelConcepts.retainAll(rulesForRevision);
-    	List<Concept> intermediateConcepts = generateIntermediateConcepts();
+        List<Concept> topLevelConcepts = rulesForRevision;
+    	List<Concept> intermediateConcepts = generateIntermediatePredicates();
     	List<IExample> fatos = generateFacts();
     	
     	List<String> topLevelPredicates = new ArrayList<String>();

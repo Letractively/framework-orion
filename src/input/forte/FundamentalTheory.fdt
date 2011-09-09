@@ -1,4 +1,4 @@
-:- module(fdt, [naotitular/1, naoapelido_Torcida/1, naotecnico/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoestadio/1, naotecnico/1, naopresidente/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoapelido_Torcida/1, naoapelido_Time/1, naotorcida/1, naotime/1, naotorcida/1, naotime/1, naopessoa/1, torcida/1, membro_Comissao_Tecnica/1, mascote/1, tecnico/1, titular/1, estadio/1, apelido_Pessoa/1, apelido_Torcida/1, funcionario/1, jogador/1, time/1, pessoa/1, patrocinador/1, torcedor/1, referesePessoa/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, refereseTime/2, torcePorTime/2, trabalhaEm/2, simboliza/2, jogaEmTime/2, patrocina/2]).
+:- module(fdt, [naotitular/1, naoapelido_Torcida/1, naotecnico/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoestadio/1, apelido/1, torcida/1, naotecnico/1, naopresidente/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, mascote/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, estadio/1, naoapelido_Torcida/1, naoapelido_Time/1, time/1, naotorcida/1, naotime/1, pessoa/1, naotorcida/1, naotime/1, naopessoa/1, patrocinador/1, tecnico/1, titular/1, apelido_Pessoa/1, apelido_Torcida/1, torcedor/1, referesePessoa/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, refereseTime/2, torcePorTime/2, trabalhaEm/2, simboliza/2, jogaEmTime/2, patrocina/2]).
 
 naotitular(X) :- example(naotitular(X)).
 naoapelido_Torcida(X) :- example(naoapelido_Torcida(X)).
@@ -9,47 +9,45 @@ naopessoa(X) :- example(naopessoa(X)).
 naopatrocinador(X) :- example(naopatrocinador(X)).
 naomascote(X) :- example(naomascote(X)).
 naoestadio(X) :- example(naoestadio(X)).
+apelido(X) :- example(apelido(X)).
+torcida(X) :- example(torcida(X)).
 naotecnico(X) :- example(naotecnico(X)).
 naopresidente(X) :- example(naopresidente(X)).
 naotorcida(X) :- example(naotorcida(X)).
 naotime(X) :- example(naotime(X)).
 naopessoa(X) :- example(naopessoa(X)).
 naopatrocinador(X) :- example(naopatrocinador(X)).
+mascote(X) :- example(mascote(X)).
 naotorcida(X) :- example(naotorcida(X)).
 naotime(X) :- example(naotime(X)).
 naopessoa(X) :- example(naopessoa(X)).
 naopatrocinador(X) :- example(naopatrocinador(X)).
 naomascote(X) :- example(naomascote(X)).
+estadio(X) :- example(estadio(X)).
 naoapelido_Torcida(X) :- example(naoapelido_Torcida(X)).
 naoapelido_Time(X) :- example(naoapelido_Time(X)).
+time(X) :- example(time(X)).
 naotorcida(X) :- example(naotorcida(X)).
 naotime(X) :- example(naotime(X)).
+pessoa(X) :- example(pessoa(X)).
 naotorcida(X) :- example(naotorcida(X)).
 naotime(X) :- example(naotime(X)).
 naopessoa(X) :- example(naopessoa(X)).
-torcida(X) :- example(torcida(X)).
-membro_Comissao_Tecnica(X) :- example(membro_Comissao_Tecnica(X)).
-mascote(X) :- example(mascote(X)).
-tecnico(X) :- example(tecnico(X)).
-titular(X) :- example(titular(X)).
-estadio(X) :- example(estadio(X)).
-apelido_Pessoa(X) :- example(apelido_Pessoa(X)).
-apelido_Torcida(X) :- example(apelido_Torcida(X)).
-funcionario(X) :- example(funcionario(X)).
-jogador(X) :- example(jogador(X)).
-time(X) :- example(time(X)).
-pessoa(X) :- example(pessoa(X)).
 patrocinador(X) :- example(patrocinador(X)).
-torcedor(X) :- example(torcedor(X)).
+tecnico(A) :- funcionario(A), trabalhaEm(A,B), Time(B).
+titular(A) :- jogador(A).
+apelido_Pessoa(A) :- apelido(A), naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), Pessoa(B).
+apelido_Torcida(A) :- apelido(A), refereseTorcida(A,B), Torcida(B).
+torcedor(A) :- pessoa(A), torcePorTime(A,B), Time(B).
 
 
-referesePessoa(X,Y) :- example(referesePessoa(X,Y)).
-refereseTorcida(X,Y) :- example(refereseTorcida(X,Y)).
-comandaClube(X,Y) :- example(comandaClube(X,Y)).
-pertenceTime(X,Y) :- example(pertenceTime(X,Y)).
-refereseTime(X,Y) :- example(refereseTime(X,Y)).
-torcePorTime(X,Y) :- example(torcePorTime(X,Y)).
-trabalhaEm(X,Y) :- example(trabalhaEm(X,Y)).
-simboliza(X,Y) :- example(simboliza(X,Y)).
-jogaEmTime(X,Y) :- example(jogaEmTime(X,Y)).
-patrocina(X,Y) :- example(patrocina(X,Y)).
+referesePessoa(a,b) :- Apelido_Pessoa(a), Pessoa(b).
+refereseTorcida(a,b) :- Apelido_Torcida(a), Torcida(b).
+comandaClube(a,b) :- Presidente(a), Time(b).
+pertenceTime(a,b) :- Estadio(a), Time(b).
+refereseTime(a,b) :- Apelido_Time(a), Time(b).
+torcePorTime(a,b) :- Torcedor(a), Time(b); torcePorTime(a,b) :- Torcida(a), Time(b).
+trabalhaEm(a,b) :- Membro_Comissao_Tecnica(a), Time(b); trabalhaEm(a,b) :- Tecnico(a), Time(b).
+simboliza(a,b) :- Mascote(a), Time(b).
+jogaEmTime(a,b) :- Jogador(a), Time(b).
+patrocina(a,b) :- Patrocinador(a), Time(b).
