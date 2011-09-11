@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Felipe
  */
-public class Concept extends ForteResource{
+public class Concept extends ForteResource {
     private String nome;
     private List<ConceptAttribute> atributos = null;
     private List<ConceptAxiom> axiomas = null;

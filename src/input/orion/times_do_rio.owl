@@ -1126,7 +1126,7 @@
 	<!-- TITULAR: Flamengo -->
 	<owl:Thing rdf:about="#Leo_Moura">
 		<rdf:type rdf:resource="#Titular"/>
-		<primeiroNome rdf:datatype="&xsd;string">Léo</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Leo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Moura</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
@@ -1230,7 +1230,7 @@
 	<owl:Thing rdf:about="#Leandro_Euzebio">
 		<rdf:type rdf:resource="#Titular"/>
 		<primeiroNome rdf:datatype="&xsd;string">Leandro</primeiroNome>
-        <sobrenome rdf:datatype="&xsd;string">Euzébio</sobrenome>
+        <sobrenome rdf:datatype="&xsd;string">Euzebio</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
@@ -1261,7 +1261,7 @@
 	<!-- TITULAR: Fluminense -->
 	<owl:Thing rdf:about="#Deco">
 		<rdf:type rdf:resource="#Titular"/>
-		<primeiroNome rdf:datatype="&xsd;string">André Luis</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Andre Luis</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Souza</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
@@ -1309,14 +1309,14 @@
 	<owl:Thing rdf:about="#Arevalo">
 		<rdf:type rdf:resource="#Titular"/>
 		<primeiroNome rdf:datatype="&xsd;string">Egidio</primeiroNome>
-        <sobrenome rdf:datatype="&xsd;string">Arévalo Rios</sobrenome>
+        <sobrenome rdf:datatype="&xsd;string">Arevalo Rios</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
 	<!-- TITULAR: Botafogo -->
 	<owl:Thing rdf:about="#Somalia">
 		<rdf:type rdf:resource="#Titular"/>
-		<primeiroNome rdf:datatype="&xsd;string">Paulo Rogério</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Paulo Rogerio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Reis da Silva</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
@@ -1467,7 +1467,7 @@
 	<!-- EX_JOGADOR: Fluminense -->
 	<owl:Thing rdf:about="#Felix">
 		<rdf:type rdf:resource="#Ex_Jogador"/>
-		<primeiroNome rdf:datatype="&xsd;string">Félix</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Felix</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Mielli Venerando</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
@@ -1499,7 +1499,7 @@
 	<!-- EX_JOGADOR: Fluminense -->
 	<owl:Thing rdf:about="#Romerito">
 		<rdf:type rdf:resource="#Ex_Jogador"/>
-		<primeiroNome rdf:datatype="&xsd;string">Julio César</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Julio Cesar</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Romerito</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
@@ -1531,7 +1531,7 @@
 	<!-- EX_JOGADOR: Botafogo -->
 	<owl:Thing rdf:about="#Gerson">
 		<rdf:type rdf:resource="#Ex_Jogador"/>
-		<primeiroNome rdf:datatype="&xsd;string">Gérson</primeiroNome>
+		<primeiroNome rdf:datatype="&xsd;string">Gerson</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Oliveira Nunes</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
