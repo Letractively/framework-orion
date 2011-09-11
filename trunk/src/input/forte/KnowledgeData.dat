@@ -1,6 +1,6 @@
 top_level_predicates([ex_Jogador(varjogador), apelido_Time(varapelido), presidente(varfuncionario), membro_Comissao_Tecnica(varfuncionario), funcionario(varpessoa), jogador(varpessoa)]).
 
-intermediate_predicates([funcionario(varpessoa), jogador(varpessoa)]).
+intermediate_predicates]).
 
 strata([]).
 
@@ -11,3 +11,11 @@ object_attributes([varpresidente([]), vartorcedor([]), vartime([]), varestadio([
 object_relations([referesePessoa(varapelido_Pessoa,varpessoa), refereseTorcida(varapelido_Torcida,vartorcida), comandaClube(varpresidente,vartime), pertenceTime(varestadio,vartime), refereseTime(varapelido_Time,vartime), torcePorTime(vartorcedor,vartime), trabalhaEm(varmembro_Comissao_Tecnica,vartime), simboliza(varmascote,vartime), jogaEmTime(varjogador,vartime), patrocina(varpatrocinador,vartime)]).
 
 language_bias([depth_limit(5), use_attr, use_relations, use_theory, use_built_in, relation_tuning(highly_relational)]).
+
+example(
+[Apelido_Time(Fla), Ex_Jogador(Magno_Alves), Apelido_Time(Mengao), Ex_Jogador(Fio_Maravilha), Apelido_Time(Flu), Presidente(Patricia_Amorim), Ex_Jogador(Gerson), Membro_Comissao_Tecnica(Eduardo_Fontes), Membro_Comissao_Tecnica(Flavio_Meirelles), Ex_Jogador(Jairzinho), Ex_Jogador(Didi), Ex_Jogador(Romerito), Ex_Jogador(Rivelino), Ex_Jogador(Renato_Gaucho), Ex_Jogador(Romario), Apelido_Time(Po_de_Arroz), Ex_Jogador(Garrincha), Ex_Jogador(Nilton_Santos), Ex_Jogador(Cuca), Ex_Jogador(Zagallo), Ex_Jogador(Tulio), Ex_Jogador(Washington), Ex_Jogador(Zico), Apelido_Time(Fogo), Presidente(Mauricio_Assumpcao), Apelido_Time(Bacalhau), Apelido_Time(Glorioso), Ex_Jogador(Pet), Ex_Jogador(Edmundo), Ex_Jogador(Djalminha), Apelido_Time(Gigante_da_Coliina), Presidente(Peter_Siemsen), Ex_Jogador(Felix), Ex_Jogador(Carlos_Germano), Ex_Jogador(Roberto_Dinamite), Ex_Jogador(Gilmar), Membro_Comissao_Tecnica(Enderson_Moreira)]
+,[]
+,[]
+,[]
+).
+

@@ -131,14 +131,6 @@ public class ForteInputGeneratorTest {
     	}
     }
     
-//    @Test
-    public void testGeneratePositiveExamples(){
-        System.out.println("\n\n========= Escrever Exemplos Positivos =========");
-        List<IExample> lista = gerador.generatePositiveExamples();
-        for(IExample s : lista){
-            System.out.println(s);
-        }
-    }
 
 //    @Test
     public void testGenerateObjectAttributes(){
