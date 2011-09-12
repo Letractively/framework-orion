@@ -1,4 +1,4 @@
-:- module(fdt, [apelido/1, torcida/1, mascote/1, estadio/1, time/1, pessoa/1, patrocinador/1, naotitular/1, naoapelido_Torcida/1, naotecnico/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoestadio/1, naotecnico/1, naopresidente/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoapelido_Torcida/1, naoapelido_Time/1, naotorcida/1, naotime/1, naotorcida/1, naotime/1, naopessoa/1, tecnico/1, titular/1, apelido_Pessoa/1, apelido_Torcida/1, torcedor/1, referesePessoa/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, refereseTime/2, torcePorTime/2, trabalhaEm/2, simboliza/2, jogaEmTime/2, patrocina/2]).
+:- module(fdt, [apelido/1, torcida/1, mascote/1, estadio/1, time/1, pessoa/1, patrocinador/1, naotitular/1, naoapelido_Torcida/1, naotecnico/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoestadio/1, naotecnico/1, naopresidente/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naotorcida/1, naotime/1, naopessoa/1, naopatrocinador/1, naomascote/1, naoapelido_Torcida/1, naoapelido_Time/1, naotorcida/1, naotime/1, naotorcida/1, naotime/1, naopessoa/1, tecnico/1, titular/1, apelido_Pessoa/1, apelido_Torcida/1, funcionario/1, jogador/1, torcedor/1, referesePessoa/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, refereseTime/2, torcePorTime/2, trabalhaEm/2, simboliza/2, jogaEmTime/2, patrocina/2]).
 
 apelido(X) :- example(apelido(X)).
 torcida(X) :- example(torcida(X)).
@@ -38,6 +38,8 @@ tecnico(A) :- funcionario(A), trabalhaEm(A,B), Time(B).
 titular(A) :- jogador(A).
 apelido_Pessoa(A) :- apelido(A), naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), Pessoa(B).
 apelido_Torcida(A) :- apelido(A), refereseTorcida(A,B), Torcida(B).
+funcionario(A) :- pessoa(A).
+jogador(A) :- pessoa(A), jogaEmTime(A,B), Time(B).
 torcedor(A) :- pessoa(A), torcePorTime(A,B), Time(B).
 
 

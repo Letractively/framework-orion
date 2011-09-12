@@ -451,7 +451,7 @@ public class ForteInputGenerator {
      *
      * @return List<IExample>
      */
-    public List<IExample> generateNegativeExamples(){
+    public List<IExample> generateNegativeExamples(List<Concept> selectedConcepts){
         List<IExample> listaExemplosNegativos = new ArrayList<IExample>();
         Set<Individual> conjIndividuals = parser.listarInstancias();
         Set<OntClass> conjClasses = parser.listarClasses();
@@ -484,8 +484,21 @@ public class ForteInputGenerator {
         //////////////////////////////////////
         //          Heurística 2            //
         //////////////////////////////////////
-        for(OntClass classeOriginal : conjClasses){
-            Set<Individual> individualsPos = parser.listarInstancias(classeOriginal);
+        //Selecionar todas as OntClass correspondentes aos conceitos selecionados
+        List<OntClass> ontClassesSelecionadas = new ArrayList<OntClass>();
+        for(Concept concept : selectedConcepts){
+        	for(OntClass ontClass : conjClasses){
+        		if(ontClass.getLocalName().equalsIgnoreCase(concept.getNome())){
+        			ontClassesSelecionadas.add(ontClass);
+        		}
+        	}
+        }
+        
+        //Para cada OntClass recuperar todas os individuals dela e subtrair do conjunto
+        //total de individuals. o conjunto final é usado para gerar os exemplos negativos
+        //daquela OntClass
+        for(OntClass ontClass : ontClassesSelecionadas){
+            Set<Individual> individualsPos = parser.listarInstancias(ontClass);
             Set<Individual> individualsNeg = conjIndividuals;
             individualsNeg.removeAll(individualsPos);
             
@@ -493,7 +506,7 @@ public class ForteInputGenerator {
             
             for(Individual i :individualsNeg){
                 exNegConcept = new ConceptExample();
-                exNegConcept.setPredicado(classeOriginal.getLocalName());
+                exNegConcept.setPredicado(ontClass.getLocalName());
                 exNegConcept.setPrimeiroTermo(i.getLocalName());
                 listaExemplosNegativos.add(exNegConcept);
             }
@@ -534,13 +547,15 @@ public class ForteInputGenerator {
      * Um predicado é intermediate quando aparece no corpo de outra regra.</p>
      */
     public List<Concept> generateIntermediatePredicates(List<Concept> topLevelConcepts){
-    	List<Concept> conceitosRevisaveis = retrieveRevisableConcepts();
-    	List<Concept> possibleIntermediateConcepts = conceitosRevisaveis;
+    	List<Concept> conceitosRevisaveis = new ArrayList<Concept>();
+    	List<Concept> possibleIntermediateConcepts = new ArrayList<Concept>();
     	List<Concept> trueIntermediates = new ArrayList<Concept>();
+    	
+    	conceitosRevisaveis.addAll(retrieveRevisableConcepts());
+    	possibleIntermediateConcepts.addAll(conceitosRevisaveis);
     	
     	//Primeiramente remover todos que não são top_level
     	possibleIntermediateConcepts.removeAll(topLevelConcepts);
-    	
     	//refinar deixando somente os conceitos que são de fato predicados 
     	//intermediarios dos conceitos no top_level
     	for(Concept cInter : possibleIntermediateConcepts){
@@ -548,7 +563,7 @@ public class ForteInputGenerator {
     		for(Concept cTop : topLevelConcepts){
     			List<ConceptAxiom> axiomas = cTop.getAxiomas();
     			for(ConceptAxiom a : axiomas){
-    				if(cInter.getNome().equals(a.getValor())){
+    				if(cInter.getNome().equalsIgnoreCase(a.getValor())){
     					isIntermediate = true;
     				}
     			}
@@ -558,19 +573,53 @@ public class ForteInputGenerator {
     		}
     	}
     	
-    	//TODO verificar se relacionamentos podem ser intermediates  ou se todos devem ir para
-    	//o FDT
-    	
-    	
+    	//TODO verificar se relacionamentos podem ser intermediates  ou se todos devem ir para o FDT
     	return trueIntermediates;
     }
+    
     /**
-     * Recuperar todos os conceitos filhos de Thing e gerar fatos com base em 
-     * suas instancias.
-     * Recuperar todos os exemplos de Object Properties
+     * Recuperar todas as instancias dos conceitos que não estão sendo revisados para
+     * formar o conjunto de fatos. As instancias dos relacionamentos também devem compor
+     * o conjunto de fatos da teoria.
      */
-    public List<IExample> generateFacts(){
-    	return new ArrayList<IExample>();
+    public List<IExample> generateFacts(List<Concept> selectedConcepts){
+        //Criar lista que será retornada
+    	List<IExample> conjFacts = new ArrayList<IExample>();
+        //Recuperar todos os individuals (instancias)
+    	Set<Individual> conjIndividuals = parser.listarInstancias();
+    	//Conjunto com as instancias dos conceitos selecionados para revisao
+        Set<Individual> conjIndividualsSelected = new HashSet<Individual>();
+        
+        //verificar se existem instancias, não existindo acaba o processamento
+        if(conjIndividuals.isEmpty()){
+            return null;
+        }
+        
+        //Separar somente as instancias dos conceitos selecionados
+        for(Individual i :conjIndividuals){
+        	boolean isSelected = false;
+        	for(Concept c : selectedConcepts){
+        		if(i.getOntClass().getLocalName().equalsIgnoreCase(c.getNome())){
+        			isSelected = true;
+        		}
+        	}
+        	if(isSelected){
+        		conjIndividualsSelected.add(i);
+        	}
+        }
+        
+        //Remove do conjunto de individuals as instancias dos conceitos selecionados
+        conjIndividuals.removeAll(conjIndividualsSelected);
+        
+        //Gera fatos com os individuals
+        for(Individual i : conjIndividuals){
+            ConceptExample fact = new ConceptExample();
+            fact.setPredicado(i.getOntClass().getLocalName());
+            fact.setPrimeiroTermo(i.getLocalName());
+            conjFacts.add(fact);
+        }
+        
+        return conjFacts;
     }
     
     
@@ -716,6 +765,10 @@ public class ForteInputGenerator {
     	List<String> topLevelPredicates = new ArrayList<String>();
     	List<String> intermediatePredicates = new ArrayList<String>();
     	Set<String> variaveis = new HashSet<String>();
+    	//Unir as regras selecionadas para revisao (top_level + intermediates)
+    	List<Concept> regrasParaRevisao = rulesForRevision;
+    	regrasParaRevisao.addAll(generateIntermediatePredicates(rulesForRevision));
+    	
     	
     	//Recuperar predicados de top_level e intermediate.
     	//recupera o nome do predicado e a sua superclasse, gera-se entao uma variavel
@@ -781,11 +834,7 @@ public class ForteInputGenerator {
     	
     	
     	//Preparar Exemplos Positivos
-    	//Unir as regras selecionadas para revisao (top_level + intermediates)
-    	List<Concept> regrasParaRevisao = topLevelConcepts;
-    	regrasParaRevisao.addAll(generateIntermediatePredicates(topLevelConcepts));
     	List<IExample> exemplosPositivosList = generatePositiveExamples(regrasParaRevisao);
-    	
     	String exemplosPositivos = "[";
     	if(exemplosPositivosList.size()!=0){
     		for(IExample ex : exemplosPositivosList){
@@ -793,17 +842,32 @@ public class ForteInputGenerator {
         	}
         	exemplosPositivos = exemplosPositivos.substring(0, exemplosPositivos.length()-2);
     	}
-    	
     	exemplosPositivos += "]";
     	
     	//Preparar Exemplos negativos
-    	String exemplosNegativos = "[]";
+    	List<IExample> exemplosNegativosList = generateNegativeExamples(regrasParaRevisao);
+    	String exemplosNegativos = "[";
+    	if(exemplosNegativosList.size()!=0){
+    		for(IExample ex : exemplosNegativosList){
+        		exemplosNegativos += ex.toString()+", ";
+        	}
+    		exemplosNegativos = exemplosNegativos.substring(0, exemplosNegativos.length()-2);
+    	}
+    	exemplosNegativos += "]";
     	
     	//Preparar Objects
     	String objects = "[]";
     	
     	//Preparar Fatos
-    	String facts = "[]";
+    	List<IExample> factsList = generateFacts(regrasParaRevisao);
+    	String facts = "[";
+    	if(factsList.size()!=0){
+    		for(IExample ex : factsList){
+    			facts += ex.toString()+", ";
+        	}
+    		facts = facts.substring(0, facts.length()-2);
+    	}
+    	facts += "]";
     	
     	//Realizar a escrita em arquivo
     	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/KnowledgeData.dat"));
