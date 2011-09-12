@@ -41,14 +41,22 @@ public class OntoForteUI {
             System.out.println(c);
         }
         
+        //Divisao das listas necessaria para resolver BUG com geração de Intermediate Predicates
+        List<Concept> listaDAT = new ArrayList<Concept>();
+        listaDAT.addAll(conceitosParaRevisao);
+        List<Concept> listaTHY = new ArrayList<Concept>();
+        listaTHY.addAll(conceitosParaRevisao);
+        List<Concept> listaFDT = new ArrayList<Concept>();
+        listaFDT.addAll(conceitosParaRevisao);
+        
         /**************************************
          ** Criar os 4 arquivos para o FORTE **
          **************************************/
         try {
             gerador.generateDomainKnowledgeFile();
-            gerador.generateTheoryRules(conceitosParaRevisao);
-            gerador.generateFundamentalTheory(conceitosParaRevisao);
-            gerador.generateDataFile(conceitosParaRevisao);
+            gerador.generateTheoryRules(listaTHY);
+            gerador.generateFundamentalTheory(listaFDT);
+            gerador.generateDataFile(listaDAT);
         } catch (IOException ex) {
             Logger.getLogger(OntoForteUI.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -141,14 +141,6 @@ public class ForteInputGeneratorTest {
         }
     }
 
-//    @Test
-    public void testGenerateNegativeExamples(){
-        System.out.println("\n\n========= Escrever Exemplos Negativos =========");
-        List<IExample> lista = gerador.generateNegativeExamples();
-        for(IExample s : lista){
-            System.out.println(s);
-        }
-    }
 
 //    @Test
     public void testGenerateTopLevelPredicates() {
