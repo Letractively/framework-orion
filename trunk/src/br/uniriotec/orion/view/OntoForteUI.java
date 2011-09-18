@@ -1,13 +1,15 @@
 
 package br.uniriotec.orion.view;
 
-import br.uniriotec.orion.control.ForteInputGenerator;
-import br.uniriotec.orion.model.forte.resources.Concept;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.uniriotec.orion.control.ForteDataGenerator;
+import br.uniriotec.orion.control.ForteFileGenerator;
+import br.uniriotec.orion.model.forte.resources.Concept;
 
 /**
  * <p>Classe responsável por realizar a interface com o usuário. Através desta classe é
@@ -20,8 +22,9 @@ public class OntoForteUI {
     
      public OntoForteUI(){
         String urlOntologia = "src/input/orion/times_do_rio.owl";
-        ForteInputGenerator gerador = new ForteInputGenerator(urlOntologia);
-        List<Concept> conceitosRevisaveis = gerador.retrieveRevisableConcepts();
+        ForteDataGenerator dataGenerator = new ForteDataGenerator(urlOntologia);
+        ForteFileGenerator fileGenerator = new ForteFileGenerator(urlOntologia);
+        List<Concept> conceitosRevisaveis = dataGenerator.retrieveRevisableConcepts();
         
         System.out.println("\n=== Regras Revisaveis ===");
         for(Concept c : conceitosRevisaveis){
@@ -53,10 +56,10 @@ public class OntoForteUI {
          ** Criar os 4 arquivos para o FORTE **
          **************************************/
         try {
-            gerador.generateDomainKnowledgeFile();
-            gerador.generateTheoryRules(listaTHY);
-            gerador.generateFundamentalTheory(listaFDT);
-            gerador.generateDataFile(listaDAT);
+        	fileGenerator.generateDomainKnowledgeFile();
+        	fileGenerator.generateTheoryRules(listaTHY);
+        	fileGenerator.generateFundamentalTheory(listaFDT);
+        	fileGenerator.generateDataFile(listaDAT);
         } catch (IOException ex) {
             Logger.getLogger(OntoForteUI.class.getName()).log(Level.SEVERE, null, ex);
         }
