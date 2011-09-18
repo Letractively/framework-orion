@@ -256,6 +256,14 @@ public class ForteFileGenerator {
     	exemplosNegativos += "]";
     	
     	//Preparar Objects
+    	/* 
+    	 * REVER TODA ESTA IDEIA APOS REUNIAO COM A KATE SOBRE A IDEIA DO "ISA"
+    	 * 
+    	 * - Recuperar as variaveis usadas no Object_attributes
+    	 * - Para cada variavel recuperar instancias do conceito representado
+    	 * - Com a instancia escreve-se [id, id_relacionado1, id_relacionado2, ...]
+    	 * de acordo com a ordem descrita nas variaveis.
+    	 */
     	String objects = "[]";
     	
     	//Preparar Fatos
