@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author Felipe
  */
 public class ForteInputGeneratorTest {
-    ForteInputGenerator gerador;
+    ForteDataGenerator gerador;
 
     public ForteInputGeneratorTest() {
     }
@@ -42,7 +42,7 @@ public class ForteInputGeneratorTest {
     public void setUp() {
 //        String urlOntologia = "src/input/orion/instOntology_RDF.owl";
         String urlOntologia = "src/input/orion/times_do_rio.owl";
-        gerador = new ForteInputGenerator(urlOntologia);
+        gerador = new ForteDataGenerator(urlOntologia);
     }
 
     @After

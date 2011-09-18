@@ -23,7 +23,15 @@ public class Relationship extends ForteResource {
         result = result.substring (0, result.length() - 2);
         return result;
     }
-
+    
+    /**
+     * retorna todos as string que representam relacionamentos para o FORTE.
+     * Um relacionamento é baseado em um ObjetctProperty da ontologia, que tem apenas um domain,
+     * mas pode possuir multiplos Ranges, desta forma, cada regra gerada representa um par
+     * Range+Domain.
+     * 
+     * @return List<String>
+     */
     public List<String> getRelacionamentos(){
         List<String> result = new ArrayList<String>();
         for(String s : primeiroTermo){
