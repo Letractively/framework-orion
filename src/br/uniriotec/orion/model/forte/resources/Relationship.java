@@ -18,7 +18,7 @@ public class Relationship extends ForteResource {
     public String toString(){
         String result = "";
         for(String s : primeiroTermo){
-            result += nomeRelacionamento + "(a,b) :- " + s + "(a), " + segundoTermo + "(b); ";
+            result += nomeRelacionamento + "(a,b) :- " + s + "(a), " + segundoTermo + "(b). ";
         }
         result = result.substring (0, result.length() - 2);
         return result;
