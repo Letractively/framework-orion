@@ -1,9 +1,6 @@
 
 package br.uniriotec.orion.control;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -85,7 +82,7 @@ public class ForteDataGenerator {
              * faz referencia a classe pai e adiciona aos axiomas do conceito.
              *
              * Recupera todos os restrictions indicados nos subclassOf restantes
-             * e adiciona como restriçÃµes no conceito atraves do método addRestriction
+             * e adiciona como restriçÃµes no conceito atraves do metodo addRestriction
              * OBS: Restrictions são Superclasses sem LocalName.
              */
             if(ontClass.getSuperClass() != null){
@@ -98,7 +95,7 @@ public class ForteDataGenerator {
                        axioma.setNome("subClassOf");
                        axioma.setValor(lowerFirstChar(aux.getLocalName()));
                        tmpConcept.addConceptAxiom(axioma);
-                   }else{ //é um restriction
+                   }else{ //e um restriction
                        Restriction restriction = aux.asRestriction();
                        tmpConcept.addConceptRestriction(recuperarDadosRestriction(restriction));
                    }
@@ -109,7 +106,7 @@ public class ForteDataGenerator {
              * Recupera todos os axiomas DisjointWith do conceito e cria um conceito
              * auxiliar com para permitir a negação.
              *
-             * Como o forte não é capaz de revisar regras com negação é necessário
+             * Como o forte não e capaz de revisar regras com negação e necessário
              * criar um novo ceonceito que possui a negação e inclui-lo no FDT.
              *
              * Cria-se então um conceitoNegação e um axioma subclassOf relacionando
@@ -131,13 +128,13 @@ public class ForteDataGenerator {
                     conceitoNeg.setNome("nao"+lowerFirstChar(aux.getLocalName()));
                     conceitoNeg.addConceptAxiom(axiomaNeg);
 
-                    //Adiciona o conceito negativo Ã  lista de conceitos
+                    //Adiciona o conceito negativo a lista de conceitos
                     conceptsList.add(conceitoNeg);
 
                     //adiciona a referencia de disjunção
                     ConceptAxiom axioma = new ConceptAxiom();
                     axioma.setNome("disjointWith");
-                    axioma.setValor(conceitoNeg.getNome());
+                    axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
 
                     tmpConcept.addConceptAxiom(axioma);
                 }
@@ -148,7 +145,7 @@ public class ForteDataGenerator {
              * equivalencia a outra classe da ontologia então ambas deverão
              * ser excluídas da revisão, sendo adicionadas ao FDT.
              *
-             * Na geração do conceito é inserido um axioma equivalentClass na lista
+             * Na geração do conceito e inserido um axioma equivalentClass na lista
              * de axiomas com o valor igual ao nome do conceito ao qual se refere
              * a equivalencia. Desta forma será possível identificar posteriormente
              * os dois conceitos que deverão ser inseridos no FDT.
@@ -161,7 +158,7 @@ public class ForteDataGenerator {
                     aux = it.next();
                     ConceptAxiom axioma = new ConceptAxiom();
                     axioma.setNome("equivalentClass");
-                    axioma.setValor(aux.getLocalName());
+                    axioma.setValor(lowerFirstChar(aux.getLocalName()));
                     tmpConcept.addConceptAxiom(axioma);
                 }
             }
@@ -174,12 +171,12 @@ public class ForteDataGenerator {
     
     
 	/**
-     * Método para auxiliar a retornar somente os conceitos da ontologia que são
-     * revisáveis. O método recupera a lista gerada pelo método "generateConceps"
+     * Metodo para auxiliar a retornar somente os conceitos da ontologia que são
+     * revisáveis. O metodo recupera a lista gerada pelo metodo "generateConceps"
      * e retira aqueles que foram criados como auxílio, possuindo o prefixo "nao"
      * ou que são subclasse de "Thing".
      * 
-     * OBS: caso não haja qualquer axioma de classe o conceito é tido como não
+     * OBS: caso não haja qualquer axioma de classe o conceito e tido como não
      * revisável, já que não possuir um axioma subClassOf indica ser filho de
      * "Thing".
      * 
@@ -197,7 +194,7 @@ public class ForteDataGenerator {
                     conceitoRevisavel = false;
                 }else{
                     for(ConceptAxiom ca : c.getAxiomas()){
-                        //Se for subclasse de Thing não é revisavel
+                        //Se for subclasse de Thing não e revisavel
                         if(ca.getNome().equals("subClassOf") && ca.getValor().equals("thing")){
                             conceitoRevisavel = false;
                         }else if(ca.getNome().equals("equivalentClass")){
@@ -227,9 +224,9 @@ public class ForteDataGenerator {
     }
     
     /**
-     * Este método retorna todos os conceitos que não podem ser revisáveis. No caso
+     * Este metodo retorna todos os conceitos que não podem ser revisáveis. No caso
      * os que possuem o prefixo "nao" ou que são subclasse de "Thing". Os conceitos
-     * retornados por este método devem ser inseridos no arquivo FDT do FORTE.
+     * retornados por este metodo devem ser inseridos no arquivo FDT do FORTE.
      * 
      * Conceitos que possuem o axioma de classe EquivalentClass não devem ser 
      * revisados, sendo diretamente encaminhados ao FDT.
@@ -245,8 +242,8 @@ public class ForteDataGenerator {
     }
     
     /**
-     * Método para recuperar todos os conceitos de primeiro nível da ontologia.
-     * Um conceito é dito de primeiro nível quando ele é subclasse direta de "Thing".
+     * Metodo para recuperar todos os conceitos de primeiro nível da ontologia.
+     * Um conceito e dito de primeiro nível quando ele e subclasse direta de "Thing".
      * É importante identificar conceitos de primeiro nível pois estes não possuem
      * regras descritas na ontologia.
      * 
@@ -265,7 +262,7 @@ public class ForteDataGenerator {
     }
     
     /**
-     * Método para recuperar todos os conceitos negativos gerados pelo método "generateConcepts()"
+     * Metodo para recuperar todos os conceitos negativos gerados pelo metodo "generateConcepts()"
      * para os axiomas de classe "disjointWith".
      * 
      * @return
@@ -314,22 +311,22 @@ public class ForteDataGenerator {
                     }
                 //Havendo somente um Range
                 }else{
-                    termosRange.add(rangeClasses.getLocalName());
+                    termosRange.add(lowerFirstChar(rangeClasses.getLocalName()));
                 }
                 rel.setPrimeiroTermo(termosRange);
             }
 
             //Recuperar o Domain
-            rel.setSegundoTermo(objProp.getDomain().getLocalName());
+            rel.setSegundoTermo(lowerFirstChar(objProp.getDomain().getLocalName()));
 
-            //Adicionar Objeto Ã  lista de retorno
+            //Adicionar Objeto a lista de retorno
             relationshipList.add(rel);
         }
         return relationshipList;
     }
 
     /**
-     * <p>Método para geração dos exemplos positivos da teoria a partir das
+     * <p>Metodo para geração dos exemplos positivos da teoria a partir das
      * instancias fornecidas pela ontologia.
      * <br />
      * Exemplos podem ser gerados a partir de axiomas, relacionamentos (restrictions
@@ -375,8 +372,8 @@ public class ForteDataGenerator {
         //////////////////////////////////////
         for(Individual i : conjIndividualsSelected){
             ConceptExample exPosConcept = new ConceptExample();
-            exPosConcept.setPredicado(i.getOntClass().getLocalName());
-            exPosConcept.setPrimeiroTermo(i.getLocalName());
+            exPosConcept.setPredicado(lowerFirstChar(i.getOntClass().getLocalName()));
+            exPosConcept.setPrimeiroTermo(lowerFirstChar(i.getLocalName()));
             conjExemplosPositivos.add(exPosConcept);
         }
 
@@ -419,7 +416,7 @@ public class ForteDataGenerator {
             Set<DatatypeProperty> conjDatatypes = parser.listarDatatypeProperties(classe);
             ObjectAttribute atributo = null;
             for(DatatypeProperty dataProp : conjDatatypes){
-                //TODO Adicionar Ã  lista
+                //TODO Adicionar a lista
                 if(atributo == null){
                     atributo = new ObjectAttribute();
                     atributo.setRefConceito(classe.getLocalName());
@@ -435,7 +432,7 @@ public class ForteDataGenerator {
     }
 
     /**
-     * <p>Método para geração dos exemplos negativos da teoria a partir das instancias da
+     * <p>Metodo para geração dos exemplos negativos da teoria a partir das instancias da
      * ontologia com o auxílio de axiomas das classes.
      * <br />
      *
@@ -495,7 +492,7 @@ public class ForteDataGenerator {
         }
         
         //Para cada OntClass recuperar todas os individuals dela e subtrair do conjunto
-        //total de individuals. o conjunto final é usado para gerar os exemplos negativos
+        //total de individuals. o conjunto final e usado para gerar os exemplos negativos
         //daquela OntClass
         for(OntClass ontClass : ontClassesSelecionadas){
             Set<Individual> individualsPos = parser.listarInstancias(ontClass);
@@ -506,8 +503,8 @@ public class ForteDataGenerator {
             
             for(Individual i :individualsNeg){
                 exNegConcept = new ConceptExample();
-                exNegConcept.setPredicado(ontClass.getLocalName());
-                exNegConcept.setPrimeiroTermo(i.getLocalName());
+                exNegConcept.setPredicado(lowerFirstChar(ontClass.getLocalName()));
+                exNegConcept.setPrimeiroTermo(lowerFirstChar(i.getLocalName()));
                 listaExemplosNegativos.add(exNegConcept);
             }
         }
@@ -516,8 +513,8 @@ public class ForteDataGenerator {
     }
 
     /**
-     * <p>Método responsável por gerar os top_level_predicates no arquivo .DAT.
-     * Um predicado é top_level quando NÃO aparece no corpo de nenhuma outra regra.
+     * <p>Metodo responsável por gerar os top_level_predicates no arquivo .DAT.
+     * Um predicado e top_level quando NÃO aparece no corpo de nenhuma outra regra.
      * Predicados que aparecem em corpo de regra são intermediate.</p>
      */
     public List<Concept> generatePossibleTopLevelPredicates(){
@@ -543,8 +540,8 @@ public class ForteDataGenerator {
     }
     
     /**
-     * <p>Método responsável por gerar os intermediate_predicates no arquivo .DAT.
-     * Um predicado é intermediate quando aparece no corpo de outra regra.</p>
+     * <p>Metodo responsável por gerar os intermediate_predicates no arquivo .DAT.
+     * Um predicado e intermediate quando aparece no corpo de outra regra.</p>
      */
     public List<Concept> generateIntermediatePredicates(List<Concept> topLevelConcepts){
     	List<Concept> conceitosRevisaveis = new ArrayList<Concept>();
@@ -579,7 +576,7 @@ public class ForteDataGenerator {
     
     /**
      * Recuperar todas as instancias dos conceitos que não estão sendo revisados para
-     * formar o conjunto de fatos. As instancias dos relacionamentos também devem compor
+     * formar o conjunto de fatos. As instancias dos relacionamentos tambem devem compor
      * o conjunto de fatos da teoria.
      */
     public List<IExample> generateFacts(List<Concept> selectedConcepts){
@@ -614,8 +611,8 @@ public class ForteDataGenerator {
         //Gera fatos com os individuals
         for(Individual i : conjIndividuals){
             ConceptExample fact = new ConceptExample();
-            fact.setPredicado(i.getOntClass().getLocalName());
-            fact.setPrimeiroTermo(i.getLocalName());
+            fact.setPredicado(lowerFirstChar(i.getOntClass().getLocalName()));
+            fact.setPrimeiroTermo(lowerFirstChar(i.getLocalName()));
             conjFacts.add(fact);
         }
         
@@ -625,11 +622,11 @@ public class ForteDataGenerator {
  
 
     /*********************************************************
-     **                 Métodos Auxiliares                  **
+     **                 Metodos Auxiliares                  **
      *********************************************************/
 
     /**
-     * Método auxiliar para recuperar um ConceptRestriction a partir de um objeto
+     * Metodo auxiliar para recuperar um ConceptRestriction a partir de um objeto
      * Restriction da API do JENA.
      *
      * @param restriction
@@ -655,11 +652,11 @@ public class ForteDataGenerator {
        }else if(restriction.isSomeValuesFromRestriction()){
            SomeValuesFromRestriction rest = restriction.asSomeValuesFromRestriction();
            restricao.setTipoRestriction("someValuesFrom");
-           restricao.setValorRestriction(rest.getSomeValuesFrom().getLocalName());
+           restricao.setValorRestriction(lowerFirstChar(rest.getSomeValuesFrom().getLocalName()));
        }else if(restriction.isHasValueRestriction()){
            HasValueRestriction rest = restriction.asHasValueRestriction();
            restricao.setTipoRestriction("hasValue");
-           restricao.setValorRestriction(rest.getHasValue().asResource().getLocalName());
+           restricao.setValorRestriction(lowerFirstChar(rest.getHasValue().asResource().getLocalName()));
        }else {
            restricao.setTipoRestriction("Tipo desconhecido");
            restricao.setValorRestriction("Valor desconhecido");
@@ -683,11 +680,11 @@ public class ForteDataGenerator {
                 //Adiciona cada Range ao Relationship
                 while(itDomainClasses.hasNext()){
                     Resource range =  (Resource)itDomainClasses.next();
-                    termosDomain.add(range.getLocalName());
+                    termosDomain.add(lowerFirstChar(range.getLocalName()));
                 }
             //Havendo somente um Range
             }else{
-                termosDomain.add(domainClasses.getLocalName());
+                termosDomain.add(lowerFirstChar(domainClasses.getLocalName()));
             }
         }
 
@@ -695,7 +692,7 @@ public class ForteDataGenerator {
     }
 
     /**
-     * <p>Método auxiliar para ajudar na criação de exemplos negativos através do uso
+     * <p>Metodo auxiliar para ajudar na criação de exemplos negativos atraves do uso
      * do axioma de classe DisjointWith. Dois parâmetros são recebidos, a classeOriginal,
      * ou seja, aquela sobre a qual se deseja gerar exemplos negativos e a classeDisjunta,
      * ou seja, a classe sobre a qual serão recuperadas as instâncias que serão utilizadas
@@ -715,16 +712,16 @@ public class ForteDataGenerator {
         //Gerar exemplos negativos da classe Original (com base nas instancias disjuntas)
         for(Individual i : instanciasDisj){
             exNegConcept = new ConceptExample();
-            exNegConcept.setPredicado(classeOriginal.getLocalName());
-            exNegConcept.setPrimeiroTermo(i.getLocalName());
+            exNegConcept.setPredicado(lowerFirstChar(classeOriginal.getLocalName()));
+            exNegConcept.setPrimeiroTermo(lowerFirstChar(i.getLocalName()));
             listaExemplosNeg.add(exNegConcept);
         }
 
         //Gerar exemplos negativos da classe Disjunta (com base nas instancias da classe original)
         for(Individual i : instanciasOrig){
             exNegConcept = new ConceptExample();
-            exNegConcept.setPredicado(classeDisjunta.getLocalName());
-            exNegConcept.setPrimeiroTermo(i.getLocalName());
+            exNegConcept.setPredicado(lowerFirstChar(classeDisjunta.getLocalName()));
+            exNegConcept.setPrimeiroTermo(lowerFirstChar(i.getLocalName()));
             listaExemplosNeg.add(exNegConcept);
         }
 
@@ -732,7 +729,7 @@ public class ForteDataGenerator {
     }
     
     /**
-     * Método para transformar o primeiro caracter de uma string em minusculo
+     * Metodo para transformar o primeiro caracter de uma string em minusculo
      * 
      * @param s
      * @return lowerCaseFirstCharString

@@ -34,22 +34,22 @@ naotime(A) :- not time(A).
 naotorcida(A) :- not torcida(A).
 naotime(A) :- not time(A).
 naopessoa(A) :- not pessoa(A).
-tecnico(A) :- funcionario(A), trabalhaEm(A,B), Time(B).
+tecnico(A) :- funcionario(A), trabalhaEm(A,B), time(B).
 titular(A) :- jogador(A).
-apelido_Pessoa(A) :- apelido(A), naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), Pessoa(B).
-apelido_Torcida(A) :- apelido(A), refereseTorcida(A,B), Torcida(B).
+apelido_Pessoa(A) :- apelido(A), naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), pessoa(B).
+apelido_Torcida(A) :- apelido(A), refereseTorcida(A,B), torcida(B).
 funcionario(A) :- pessoa(A).
-jogador(A) :- pessoa(A), jogaEmTime(A,B), Time(B).
-torcedor(A) :- pessoa(A), torcePorTime(A,B), Time(B).
+jogador(A) :- pessoa(A), jogaEmTime(A,B), time(B).
+torcedor(A) :- pessoa(A), torcePorTime(A,B), time(B).
 
 
-referesePessoa(a,b) :- Apelido_Pessoa(a), Pessoa(b).
-refereseTorcida(a,b) :- Apelido_Torcida(a), Torcida(b).
-comandaClube(a,b) :- Presidente(a), Time(b).
-pertenceTime(a,b) :- Estadio(a), Time(b).
-refereseTime(a,b) :- Apelido_Time(a), Time(b).
-torcePorTime(a,b) :- Torcedor(a), Time(b); torcePorTime(a,b) :- Torcida(a), Time(b).
-trabalhaEm(a,b) :- Membro_Comissao_Tecnica(a), Time(b); trabalhaEm(a,b) :- Tecnico(a), Time(b).
-simboliza(a,b) :- Mascote(a), Time(b).
-jogaEmTime(a,b) :- Jogador(a), Time(b).
-patrocina(a,b) :- Patrocinador(a), Time(b).
+referesePessoa(a,b) :- apelido_Pessoa(a), pessoa(b).
+refereseTorcida(a,b) :- apelido_Torcida(a), torcida(b).
+comandaClube(a,b) :- presidente(a), time(b).
+pertenceTime(a,b) :- estadio(a), time(b).
+refereseTime(a,b) :- apelido_Time(a), time(b).
+torcePorTime(a,b) :- Torcedor(a), time(b). torcePorTime(a,b) :- Torcida(a), time(b).
+trabalhaEm(a,b) :- Membro_Comissao_Tecnica(a), time(b). trabalhaEm(a,b) :- Tecnico(a), time(b).
+simboliza(a,b) :- mascote(a), time(b).
+jogaEmTime(a,b) :- jogador(a), time(b).
+patrocina(a,b) :- patrocinador(a), time(b).

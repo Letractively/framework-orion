@@ -51,7 +51,7 @@ public class ForteFileGenerator {
     	}
     	
     	//Preparar arquivo THY para escrita
-    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryRules.thy"));
+    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.thy"));
     	
         for(Concept c : conceitosRevisaveis){
         	/* verificar se os predicados no corpo das regras fazem parte do "rulesForRevision"
@@ -137,7 +137,7 @@ public class ForteFileGenerator {
         
         moduloFDT = moduloFDT.substring(0, moduloFDT.length()-2) + "]).";
         
-        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/FundamentalTheory.fdt"));
+        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.fdt"));
         writter.append(moduloFDT);
         writter.append(conceitosFDT);
         writter.append(relacionamentosFDT);
@@ -227,10 +227,10 @@ public class ForteFileGenerator {
     	
     	//Preparar Object Attribute
     	String objectAttr = "object_attributes([";
-    	for(String v : variaveis){
-    		objectAttr += v+"([]), ";
-    	}
-    	objectAttr = objectAttr.substring(0, objectAttr.length()-2) + "]).";
+//    	for(String v : variaveis){
+//    		objectAttr += v+"([]), ";
+//    	}
+    	objectAttr = objectAttr/*.substring(0, objectAttr.length()-2)*/ + "]).";
     	
     	
     	//Preparar Exemplos Positivos
@@ -278,7 +278,7 @@ public class ForteFileGenerator {
     	facts += "]";
     	
     	//Realizar a escrita em arquivo
-    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/KnowledgeData.dat"));
+    	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.dat"));
         writter.append(top_level+"\n\n");
         writter.append(intermediate+"\n\n");
         writter.append(strata+"\n\n");
@@ -308,8 +308,8 @@ public class ForteFileGenerator {
      * @throws IOException 
      */
     public void generateDomainKnowledgeFile() throws IOException{
-        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/TheoryDomain.dom"));
-        writter.append(":- compile('FundamentalTheory.fdt').\n");
+        BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.dom"));
+        writter.append(":- compile('times.fdt').\n");
         writter.append(":- compile('default.rv').\n");
         writter.append(":- compile('default.et').\n");
         writter.append(":- compile('default.tt').\n");
