@@ -273,6 +273,9 @@ public class ForteDataGenerator {
     	for(Concept  c : conceitosNaoRevisaveis){
     		if(c.getNome().substring(0,3).equals("nao") == true){
     			negativeConcepts.add(c);
+    		}else{
+    			//gerar regra "nao" para o conceito de rimeiro nivel
+    			
     		}
     	}
     	return negativeConcepts;
@@ -293,7 +296,7 @@ public class ForteDataGenerator {
         //Para cada ObjectProperty da Ontologia criar um objeto Relationship
         for(ObjectProperty objProp : conjObjProp){
             Relationship rel = new Relationship();
-            rel.setNome(objProp.getLocalName());
+            rel.setNome(lowerFirstChar(objProp.getLocalName()));
 
             //Criar um Iterador em cima dos valores em RANGE
             //Caso haja mais de um, todos serão adicionados ao Relationship
@@ -307,7 +310,7 @@ public class ForteDataGenerator {
                     //Adiciona cada Range ao Relationship
                     while(itRangeClasses.hasNext()){
                         Resource range =  (Resource)itRangeClasses.next();
-                        termosRange.add(range.getLocalName());
+                        termosRange.add(lowerFirstChar(range.getLocalName()));
                     }
                 //Havendo somente um Range
                 }else{

@@ -108,31 +108,41 @@ public class ForteFileGenerator {
         conceitosRevisaveisExcluidos.removeAll(rulesForRevision);
         
         String moduloFDT = ":- module(fdt, [";
+        Set<String> itensModule = new HashSet<String>();
         String conceitosFDT = "\n\n";
         String relacionamentosFDT = "\n\n";
         
         //Escrever conceitos Não revisáveis (Conceitos de primeiro nivel)
         for(Concept c : conceitosPrimeiroNivel){
             conceitosFDT += c.getNome() + "(X) :- example(" + c.getNome() + "(X)" + ").\n";
-            moduloFDT += c.getNome() + "/1, ";
+            itensModule.add(c.getNome() + "/1, ");
         }
         
         //Escrever conceitos negativos gerados pelo axioma disjointWith
         for(Concept c : conceitosNegativos){
-            conceitosFDT += c.toString()+"\n";
-            moduloFDT += c.getNome() + "/1, ";
+        	if(conceitosFDT.contains(c.toString()) == false){
+        		conceitosFDT += c.toString()+"\n";
+                itensModule.add(c.getNome() + "/1, ");
+        	}
         }
         
         //Escrever Conceitos revisaveis excluidos da revisão
         for(Concept c : conceitosRevisaveisExcluidos){
-            conceitosFDT += c.toString()+"\n";
-            moduloFDT += c.getNome() + "/1, ";
+        	if(conceitosFDT.contains(c.toString()) == false){
+        		conceitosFDT += c.toString()+"\n";
+                itensModule.add(c.getNome() + "/1, ");
+        	}
         }
         
         //Escrever relacionamentos
         for(Relationship r : relacionamentos){
             relacionamentosFDT += r.toString()+".\n";
-            moduloFDT += r.getNome() + "/2, ";
+            itensModule.add(r.getNome() + "/2, ");
+        }
+        
+        //inserir todos os itensModule em moduloFDT
+        for(String s : itensModule){
+        	moduloFDT += s;
         }
         
         moduloFDT = moduloFDT.substring(0, moduloFDT.length()-2) + "]).";
