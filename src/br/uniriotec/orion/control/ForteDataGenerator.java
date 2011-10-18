@@ -124,7 +124,7 @@ public class ForteDataGenerator {
                     Concept conceitoNeg = new Concept();
                     ConceptAxiom axiomaNeg = new ConceptAxiom();
                     axiomaNeg.setNome("subClassOf");
-                    axiomaNeg.setValor("not "+lowerFirstChar(aux.getLocalName()));
+                    axiomaNeg.setValor("\\+ "+lowerFirstChar(aux.getLocalName()));
                     conceitoNeg.setNome("nao"+lowerFirstChar(aux.getLocalName()));
                     conceitoNeg.addConceptAxiom(axiomaNeg);
 
