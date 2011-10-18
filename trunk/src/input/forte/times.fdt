@@ -1,4 +1,4 @@
-:- module(fdt, [titular/1, naoapelido_Time/1, naopatrocinador/1, apelido_Torcida/1, naopessoa/1, refereseTorcida/2, naotime/1, funcionario/1, pertenceTime/2, pessoa/1, naopresidente/1, patrocina/2, naotecnico/1, naotitular/1, naoestadio/1, tecnico/1, apelido_Pessoa/1, patrocinador/1, torcePorTime/2, refereseTime/2, naotorcida/1, apelido/1, time/1, jogaEmTime/2, estadio/1, mascote/1, torcedor/1, trabalhaEm/2, referesePessoa/2, torcida/1, naoapelido_Torcida/1, jogador/1, naomascote/1, comandaClube/2, simboliza/2]).
+:- module(fdt, [titular/1, naoapelido_Time/1, naopatrocinador/1, apelido_Torcida/1, naopessoa/1, refereseTorcida/2, naotime/1, pertenceTime/2, pessoa/1, naopresidente/1, patrocina/2, naotecnico/1, naotitular/1, naoestadio/1, tecnico/1, apelido_Pessoa/1, patrocinador/1, torcePorTime/2, refereseTime/2, naotorcida/1, apelido/1, time/1, jogaEmTime/2, estadio/1, mascote/1, torcedor/1, trabalhaEm/2, referesePessoa/2, torcida/1, naoapelido_Torcida/1, naomascote/1, comandaClube/2, simboliza/2]).
 
 apelido(X) :- example(apelido(X)).
 torcida(X) :- example(torcida(X)).
@@ -7,23 +7,21 @@ estadio(X) :- example(estadio(X)).
 time(X) :- example(time(X)).
 pessoa(X) :- example(pessoa(X)).
 patrocinador(X) :- example(patrocinador(X)).
-naotitular(A) :- not titular(A).
-naoapelido_Torcida(A) :- not apelido_Torcida(A).
-naotecnico(A) :- not tecnico(A).
-naotorcida(A) :- not torcida(A).
-naotime(A) :- not time(A).
-naopessoa(A) :- not pessoa(A).
-naopatrocinador(A) :- not patrocinador(A).
-naomascote(A) :- not mascote(A).
-naoestadio(A) :- not estadio(A).
-naopresidente(A) :- not presidente(A).
-naoapelido_Time(A) :- not apelido_Time(A).
+naotitular(A) :- \+ titular(A).
+naoapelido_Torcida(A) :- \+ apelido_Torcida(A).
+naotecnico(A) :- \+ tecnico(A).
+naotorcida(A) :- \+ torcida(A).
+naotime(A) :- \+ time(A).
+naopessoa(A) :- \+ pessoa(A).
+naopatrocinador(A) :- \+ patrocinador(A).
+naomascote(A) :- \+ mascote(A).
+naoestadio(A) :- \+ estadio(A).
+naopresidente(A) :- \+ presidente(A).
+naoapelido_Time(A) :- \+ apelido_Time(A).
 tecnico(A) :- funcionario(A), trabalhaEm(A,B), time(B).
 titular(A) :- jogador(A).
 apelido_Pessoa(A) :- apelido(A), naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), pessoa(B).
 apelido_Torcida(A) :- apelido(A), refereseTorcida(A,B), torcida(B).
-funcionario(A) :- pessoa(A).
-jogador(A) :- pessoa(A), jogaEmTime(A,B), time(B).
 torcedor(A) :- pessoa(A), torcePorTime(A,B), time(B).
 
 

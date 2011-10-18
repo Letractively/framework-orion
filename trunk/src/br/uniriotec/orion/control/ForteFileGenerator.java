@@ -103,9 +103,14 @@ public class ForteFileGenerator {
         List<Concept> conceitosRevisaveis = dataGenerator.retrieveRevisableConcepts();
         List<Relationship> relacionamentos = dataGenerator.generateRelationships();
         
-        //Lista de conceitos revisáveis que o usuário optou por não revisar
+        //Lista de conceitos revisaveis que o usuario optou por nao revisar
+        //Consites no conjunto de todos os conceitos revisaveis menos os selecionados
+        //para revisao e os intermediarios dos selecionados para revisao.
         List<Concept> conceitosRevisaveisExcluidos = conceitosRevisaveis;
+        //exclui os selecionados
         conceitosRevisaveisExcluidos.removeAll(rulesForRevision);
+        //exclui os intermediarios dos conceitos selecionados
+        conceitosRevisaveisExcluidos.removeAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
         
         String moduloFDT = ":- module(fdt, [";
         Set<String> itensModule = new HashSet<String>();
@@ -237,10 +242,10 @@ public class ForteFileGenerator {
     	
     	//Preparar Object Attribute
     	String objectAttr = "object_attributes([";
-//    	for(String v : variaveis){
-//    		objectAttr += v+"([]), ";
-//    	}
-    	objectAttr = objectAttr/*.substring(0, objectAttr.length()-2)*/ + "]).";
+    	for(String v : variaveis){
+    		objectAttr += v+"([]), ";
+    	}
+    	objectAttr = objectAttr.substring(0, objectAttr.length()-2) + "]).";
     	
     	
     	//Preparar Exemplos Positivos
@@ -274,7 +279,11 @@ public class ForteFileGenerator {
     	 * - Com a instancia escreve-se [id, id_relacionado1, id_relacionado2, ...]
     	 * de acordo com a ordem descrita nas variaveis.
     	 */
-    	String objects = "[]";
+    	String objects = "[";
+    	for(String v : variaveis){
+    		objects += v+"([]), ";
+    	}
+    	objects = objects.substring(0, objects.length()-2) + "]";
     	
     	//Preparar Fatos
     	List<IExample> factsList = dataGenerator.generateFacts(regrasParaRevisao);
@@ -306,7 +315,7 @@ public class ForteFileGenerator {
         	//Objects
         	writter.append(objects+"\n,\n");
         	//Facts
-        	writter.append(facts+"\n\n");
+        	writter.append("facts("+facts+")\n\n");
         writter.append(").\n\n");
         writter.flush();
     }
