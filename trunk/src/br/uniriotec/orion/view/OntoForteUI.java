@@ -21,7 +21,9 @@ import br.uniriotec.orion.model.forte.resources.Concept;
 public class OntoForteUI {
     
      public OntoForteUI(){
-        String urlOntologia = "src/input/orion/times_do_rio.owl";
+    	String urlOntologia = "src/input/orion/times_do_rio_limitado.owl";
+//    	String urlOntologia = "src/input/orion/times_do_rio.owl";
+//    	String urlOntologia = "src/input/orion/instOntology_RDF.owl";
         ForteDataGenerator dataGenerator = new ForteDataGenerator(urlOntologia);
         ForteFileGenerator fileGenerator = new ForteFileGenerator(urlOntologia);
         List<Concept> conceitosRevisaveis = dataGenerator.retrieveRevisableConcepts();
@@ -36,9 +38,11 @@ public class OntoForteUI {
          ** foram escolhidos para revisao        **
          ******************************************/
         List<Concept> conceitosParaRevisao = new ArrayList<Concept>();
-        for(int i=0; i<4; i++){
-            conceitosParaRevisao.add(conceitosRevisaveis.get(i));
-        }
+//        for(int i=0; i<4; i++){
+//            conceitosParaRevisao.add(conceitosRevisaveis.get(i));
+//        }
+        conceitosParaRevisao.add(conceitosRevisaveis.get(0));
+        conceitosParaRevisao.add(conceitosRevisaveis.get(4));
         System.out.println("\n=== Regras escolhidas para revisao ===");
         for(Concept c : conceitosParaRevisao){
             System.out.println(c);

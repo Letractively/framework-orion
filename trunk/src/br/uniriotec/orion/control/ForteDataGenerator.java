@@ -578,24 +578,36 @@ public class ForteDataGenerator {
     }
     
     /**
-     * Recuperar todas as instancias dos conceitos que n„o est„o sendo revisados para
-     * formar o conjunto de fatos. As instancias dos relacionamentos tambem devem compor
-     * o conjunto de fatos da teoria.
+     * Este método gera os fatos utilizados pelo FORTE para provar os exemplos positivos e negar
+     * os exemplos negativos. 
+     * 
+     * 	1) Os fatos com base nas instancias de conceitos que nao estao sofrendo revisao.
+     * 		Estes fatos sao representados por objetos do tipo ConceptExample.
+     * 
+     * OBS: Nao se faz necessario gerar fatos com base nos relacionamentos pois os mesmos sao 
+     * comprovados atraves das regras dos relacionamentos, que eventalmente recairao sobre fatos
+     * sobre conceitos. 
+     * 
      */
     public List<IExample> generateFacts(List<Concept> selectedConcepts){
-        //Criar lista que ser· retornada
+        //Criar lista que sera retornada
     	List<IExample> conjFacts = new ArrayList<IExample>();
         //Recuperar todos os individuals (instancias)
     	Set<Individual> conjIndividuals = parser.listarInstancias();
     	//Conjunto com as instancias dos conceitos selecionados para revisao
         Set<Individual> conjIndividualsSelected = new HashSet<Individual>();
         
-        //verificar se existem instancias, n„o existindo acaba o processamento
+        //verificar se existem instancias, nao existindo acaba o processamento
         if(conjIndividuals.isEmpty()){
             return null;
         }
         
-        //Separar somente as instancias dos conceitos selecionados
+        
+        /*
+         * Gerar fatos com base nos conceitos. Para isto separam-se os conceitos que
+         * estao sendo revisados daqueles foram excluidos da revisao. Fatos serao gerados
+         * somente com base em conceitos nao revisados.
+         */
         for(Individual i :conjIndividuals){
         	boolean isSelected = false;
         	for(Concept c : selectedConcepts){
