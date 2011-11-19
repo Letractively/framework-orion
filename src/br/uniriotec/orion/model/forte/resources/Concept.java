@@ -15,13 +15,17 @@ public class Concept extends ForteResource {
     private List<ConceptAttribute> atributos = null;
     private List<ConceptAxiom> axiomas = null;
     private List<ConceptRestriction> restrictions = null;
+    private boolean abstractConcept = false;
 
     /**
-     * Sobrecargasdo método toString para forçar a escrita do Conceito como
-     * um conceito do FORTE (Cláusula de Horn). OBS: como neste ponto ainda
-     * não é possível saber quem está no FDT e quem será revisado, ainda não 
-     * é possível inserir o prefixo "fdt:" para os predicados que estão
-     * definidos no arquivo FDT.
+     * Sobrecargando metodo toString para forcar a escrita do Conceito como
+     * um conceito do FORTE (Clausula de Horn). Se o conceito for abstrato,
+     * i.e. nao possuir instancias declaradas na ontologia, sera gerado um 
+     * conjunto de regras que explicite as subclasses do conceito.
+     * 
+     * OBS: como neste ponto ainda nao eh possivel saber quem esta no FDT e 
+     * quem sera revisado, ainda nao eh possivel inserir o prefixo "fdt:" para 
+     * os predicados que estao definidos no arquivo FDT.
      *
      * @return texto - String
      */
@@ -29,24 +33,50 @@ public class Concept extends ForteResource {
     public String toString(){
         List<String> variaveis = new ArrayList<String>(Arrays.asList(getListaVariaveis()));
         String varPrincipal = variaveis.remove(0);
-        String texto = nome + "(" + varPrincipal + ") :- ";
-
+        String texto = nome + "(" + varPrincipal + ") :-  ";
+        String regras = "";
+        
+        /*
+         * Se o conceito for abstrato o metodo ira retornar simplesmente um conjunto
+         * de regras onde cada uma faz simples referencia a uma das subclasses do conceito
+         */
+        if(abstractConcept){
+        	if(axiomas != null){
+                for(ConceptAxiom axioma : axiomas){
+                    //Se for um axioma superClassOf
+                    if(axioma.getNome().equals("superClassOf")){
+                    	regras += texto + axioma.getValor() + "(" + varPrincipal + "). ";
+                    }
+                }
+            }
+        	return regras;
+        }
+        
+        /*
+         * Se o conceito NAO for abstrato o metodo retorna as regras que o definem, com 
+         * base nos axiomas, seu s
+         */
+        
         //Adicionar AXIOMAS
         if(axiomas != null){
             for(ConceptAxiom axioma : axiomas){
-                //Se for um axioma subClassOf
+            	//Se for um axioma subClassOf
                 if(axioma.getNome().equals("subClassOf")){
-                    texto += axioma.getValor() + "("+ varPrincipal +"), ";
+                    if(nome.subSequence(0, 3).equals("nao")){
+                    	texto += axioma.getValor() + "("+ varPrincipal +"), ";
+                    }
                 }
-
                 //Se for um axioma disjointWith
                 if(axioma.getNome().equals("disjointWith")){
-                    texto += axioma.getValor() + "(" + varPrincipal + "), ";
+                	String novoAxioma = axioma.getValor() + "(" + varPrincipal + "), ";
+                	if(texto.contains(novoAxioma) == false){
+                		texto += novoAxioma;
+                	}
                 }
 
                 //Se for um axioma equivalentClass
                 if(axioma.getNome().equals("equivalentClass")){
-                    //TODO adicionar axiomas equivalentClass Ã  cláusula Horn
+                    //TODO adicionar axiomas equivalentClass a clausula Horn
                 }
             }
         }
@@ -80,7 +110,7 @@ public class Concept extends ForteResource {
             }
         }
 
-        //Lembrar de tirar a última vírgula
+        //Trocar a ultima virgula por um ponto
         int tamanhoTexto = texto.length();
         texto = texto.substring(0, tamanhoTexto-2);
         texto += ".";
@@ -199,8 +229,20 @@ public class Concept extends ForteResource {
     public void setRestrictions(List<ConceptRestriction> restrictions) {
         this.restrictions = restrictions;
     }
+    
+    /**
+     * Metodo para verificar se o conceito eh abstrato. Um conceito abstrat eh aquele que nao
+     * pode ser instanciado, portanto, nao possui instancias declaradas na ontologia.
+     */
+	public boolean isAbstractConcept() {
+		return abstractConcept;
+	}
 
-    private String[] getListaVariaveis() {
+	public void setAbstractConcept(boolean abstractConcept) {
+		this.abstractConcept = abstractConcept;
+	}
+	
+	private String[] getListaVariaveis() {
         String[] variaveisArray = {"A","B","C","D","E","F","G","H","I","J","K",
                                     "L","M","N","O","P","Q","R","S","T","U","V",
                                     "W","X","Y","Z"};

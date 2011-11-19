@@ -104,9 +104,9 @@
     
 
 
-    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#torcePorTime -->
+    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#TorcePorTime -->
 
-    <owl:ObjectProperty rdf:about="#torcePorTime">
+    <owl:ObjectProperty rdf:about="#TorcePorTime">
         <rdfs:domain rdf:resource="#Time"/>
         <rdfs:range>
             <owl:Class>
@@ -332,9 +332,9 @@
     
 
 
-    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#Ex_Jogador -->
+    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#Jogador_Aposentado -->
 
-    <owl:Class rdf:about="#Ex_Jogador">
+    <owl:Class rdf:about="#Jogador_Aposentado">
         <rdfs:subClassOf rdf:resource="#Jogador"/>
         <owl:disjointWith rdf:resource="#Titular"/>
     </owl:Class>
@@ -475,7 +475,7 @@
         <rdfs:subClassOf rdf:resource="#Pessoa"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="#torcePorTime"/>
+                <owl:onProperty rdf:resource="#TorcePorTime"/>
                 <owl:someValuesFrom rdf:resource="#Time"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -489,7 +489,7 @@
         <rdfs:subClassOf rdf:resource="&owl;Thing"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="#torcePorTime"/>
+                <owl:onProperty rdf:resource="#TorcePorTime"/>
                 <owl:someValuesFrom rdf:resource="#Time"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -640,7 +640,7 @@
 	<owl:Thing rdf:about="#Vascaino">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Vascaíno</alcunha>
-		<torcePorTime rdf:resource="#Vasco"/>
+		<TorcePorTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	
@@ -648,7 +648,7 @@
 	<owl:Thing rdf:about="#Cruzmaltino">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Cruzmaltino</alcunha>
-		<torcePorTime rdf:resource="#Vasco"/>
+		<TorcePorTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	
@@ -656,7 +656,7 @@
 	<owl:Thing rdf:about="#Flamenguista">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Flamenguista</alcunha>
-		<torcePorTime rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -664,7 +664,7 @@
 	<owl:Thing rdf:about="#Rubro_negro">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Rubro-negro</alcunha>
-		<torcePorTime rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -672,7 +672,7 @@
 	<owl:Thing rdf:about="#Botafoguense">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Botafoguense</alcunha>
-		<torcePorTime rdf:resource="#Botafogo"/>
+		<TorcePorTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
 	
@@ -680,7 +680,7 @@
 	<owl:Thing rdf:about="#Alvinegro">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Alvinegro</alcunha>
-		<torcePorTime rdf:resource="#Botafogo"/>
+		<TorcePorTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
 	
@@ -688,7 +688,7 @@
 	<owl:Thing rdf:about="#Tricolor">
 		<rdf:type rdf:resource="#Torcedor"/>
         <alcunha rdf:datatype="&xsd;string">Tricolor</alcunha>
-		<torcePorTime rdf:resource="#Fluminense"/>
+		<TorcePorTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 
 	
@@ -820,35 +820,35 @@
 	<owl:Thing rdf:about="#Forca_Jovem">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Força Jovem</nome>
-		<torcePorTIme rdf:resource="#Vasco"/>
+		<TorcePorTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	<!-- TORCIDA: Mancha_Negra -->
 	<owl:Thing rdf:about="#Mancha_Negra">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Mancha Negra</nome>
-		<torcePorTIme rdf:resource="#Vasco"/>
+		<TorcePorTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	<!-- TORCIDA: Rasta_Vasco -->
 	<owl:Thing rdf:about="#Rasta_Vasco">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Rasta Vasco</nome>
-		<torcePorTIme rdf:resource="#Vasco"/>
+		<TorcePorTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	<!-- TORCIDA: Raca_Rubro_Negra -->
 	<owl:Thing rdf:about="#Raca_Rubro_Negra">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Raça Rubro-negra</nome>
-		<torcePorTIme rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	<!-- TORCIDA: Torcida_Jovem -->
 	<owl:Thing rdf:about="#Torcida_Jovem">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Torcida Jovem</nome>
-		<torcePorTIme rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -856,7 +856,7 @@
 	<owl:Thing rdf:about="#Urubuzada">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Urubuzada</nome>
-		<torcePorTIme rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -864,7 +864,7 @@
 	<owl:Thing rdf:about="#Fla_Manguaca">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Fla Manguaça</nome>
-		<torcePorTIme rdf:resource="#Flamengo"/>
+		<TorcePorTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -872,7 +872,7 @@
 	<owl:Thing rdf:about="#Young_Flu">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Young Flu</nome>
-		<torcePorTIme rdf:resource="#Fluminense"/>
+		<TorcePorTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
 	
@@ -880,7 +880,7 @@
 	<owl:Thing rdf:about="#Forca_Flu">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Força Flu</nome>
-		<torcePorTIme rdf:resource="#Fluminense"/>
+		<TorcePorTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
 	
@@ -888,7 +888,7 @@
 	<owl:Thing rdf:about="#Torcida_Jovem_Botafogo">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Torcida Jovem Botafogo</nome>
-		<torcePorTIme rdf:resource="#Botafogo"/>
+		<TorcePorTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
 	
@@ -896,7 +896,7 @@
 	<owl:Thing rdf:about="#Furia_Jovem_do_Botafogo">
 		<rdf:type rdf:resource="#Torcida"/>
         <nome rdf:datatype="&xsd;string">Furia Jovem do Botafogo</nome>
-		<torcePorTIme rdf:resource="#Botafogo"/>
+		<TorcePorTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
 	
@@ -1354,191 +1354,191 @@
     </owl:Thing>
 	
 	
-	<!-- ////////////////////////////// EX_JOGADOR //////////////////////////////// -->
+	<!-- ////////////////////////////// Jogador_Aposentado //////////////////////////////// -->
 	
-	<!-- EX_JOGADOR: Vasco -->
+	<!-- Jogador_Aposentado: Vasco -->
 	<owl:Thing rdf:about="#Carlos_Germano">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Carlos</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Germano</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Vasco -->
+	<!-- Jogador_Aposentado: Vasco -->
 	<owl:Thing rdf:about="#Roberto_Dinamite">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Roberto</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Dinamite</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Vasco -->
+	<!-- Jogador_Aposentado: Vasco -->
 	<owl:Thing rdf:about="#Romario">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Romário</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Souza Faria</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Vasco -->
+	<!-- Jogador_Aposentado: Vasco -->
 	<owl:Thing rdf:about="#Edmundo">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Edmundo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Alves de Souza Neto</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Djalminha">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Djalma</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Dias Feitosa</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Fio_Maravilha">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">João</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Batista de Sales</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Garrincha">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Manoel Francisco</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">dos Santos</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Gilmar">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Gilmar</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Reinaldi</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Pet">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Dejan</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Petkovic</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Zagallo">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Mario Jorge</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Zagallo</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Flamengo -->
+	<!-- Jogador_Aposentado: Flamengo -->
 	<owl:Thing rdf:about="#Zico">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Arthur</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Antunes Coimbra</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Cuca">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Alexis</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Stival</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Didi">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Valdir</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Pereira</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Felix">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Felix</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Mielli Venerando</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Magno_Alves">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Magno</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Alves</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Renato_Gaucho">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Renato</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Portaluppi</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Rivelino">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Roberto</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Rivelino</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Romerito">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Julio Cesar</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Romerito</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Fluminense -->
+	<!-- Jogador_Aposentado: Fluminense -->
 	<owl:Thing rdf:about="#Washington">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Washington</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Stecanela Cerqueira</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Botafogo -->
+	<!-- Jogador_Aposentado: Botafogo -->
 	<owl:Thing rdf:about="#Nilton_Santos">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Nilton</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">dos Santos</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Botafogo -->
+	<!-- Jogador_Aposentado: Botafogo -->
 	<owl:Thing rdf:about="#Jairzinho">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Jair</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Ventura Filho</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Botafogo -->
+	<!-- Jogador_Aposentado: Botafogo -->
 	<owl:Thing rdf:about="#Gerson">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Gerson</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Oliveira Nunes</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- EX_JOGADOR: Botafogo -->
+	<!-- Jogador_Aposentado: Botafogo -->
 	<owl:Thing rdf:about="#Tulio">
-		<rdf:type rdf:resource="#Ex_Jogador"/>
+		<rdf:type rdf:resource="#Jogador_Aposentado"/>
 		<primeiroNome rdf:datatype="&xsd;string">Túlio Humberto</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Pereira da Costa</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>

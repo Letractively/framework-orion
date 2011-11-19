@@ -21,8 +21,8 @@ import br.uniriotec.orion.model.forte.resources.Concept;
 public class OntoForteUI {
     
      public OntoForteUI(){
-    	String urlOntologia = "src/input/orion/times_do_rio_limitado.owl";
-//    	String urlOntologia = "src/input/orion/times_do_rio.owl";
+//    	String urlOntologia = "src/input/orion/times_do_rio_limitado.owl";
+    	String urlOntologia = "src/input/orion/times_do_rio.owl";
 //    	String urlOntologia = "src/input/orion/instOntology_RDF.owl";
         ForteDataGenerator dataGenerator = new ForteDataGenerator(urlOntologia);
         ForteFileGenerator fileGenerator = new ForteFileGenerator(urlOntologia);
