@@ -5,20 +5,21 @@
 
 package br.uniriotec.orion.control;
 
-import br.uniriotec.orion.model.forte.resources.Concept;
-import br.uniriotec.orion.model.forte.resources.ConceptAttribute;
-import br.uniriotec.orion.model.forte.resources.ConceptAxiom;
-import br.uniriotec.orion.model.forte.resources.ConceptRestriction;
-import br.uniriotec.orion.model.forte.resources.IExample;
-import br.uniriotec.orion.model.forte.resources.ObjectAttribute;
-import br.uniriotec.orion.model.forte.resources.Relationship;
 import java.util.Iterator;
 import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import br.uniriotec.orion.model.forte.resources.Concept;
+import br.uniriotec.orion.model.forte.resources.ConceptAttribute;
+import br.uniriotec.orion.model.forte.resources.ConceptAxiom;
+import br.uniriotec.orion.model.forte.resources.ConceptRestriction;
+import br.uniriotec.orion.model.forte.resources.ObjectAttribute;
+import br.uniriotec.orion.model.forte.resources.Relationship;
 
 /**
  *

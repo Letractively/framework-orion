@@ -13,9 +13,9 @@ import br.uniriotec.orion.model.forte.resources.IExample;
 import br.uniriotec.orion.model.forte.resources.Relationship;
 
 /**
- * Classe para gerar os arquivos que serão utilizados como input pelo forte com base 
- * na ontologia fornecida pelo usuário. Esta classe faz uso da classe ForteDataGenerator
- * para gerar os dados que serão inseridos nos arquivos.
+ * Classe para gerar os arquivos que serao utilizados como input pelo forte com base 
+ * na ontologia fornecida pelo usuario. Esta classe faz uso da classe ForteDataGenerator
+ * para gerar os dados que serao inseridos nos arquivos.
  * 
  * @author Felipe
  *
@@ -30,11 +30,11 @@ public class ForteFileGenerator {
 	
     /**
      * Gera o arquivo THY, que comporta as regras que compõe a teoria. As regras do 
-     * arquivo THY são todas as regras que foram selecionadas pelo usuário para revisão
+     * arquivo THY sao todas as regras que foram selecionadas pelo usuario para revisao
      * somadas aos predicados identificados como "intermediate_predicates", ou seja, que
-     * são utilizados no corpo das regras selecionadas para revisão.
+     * sao utilizados no corpo das regras selecionadas para revisao.
      * 
-     * OBS: Predicados no corpo de regras que estão definidos no arquivo FDT receberão
+     * OBS: Predicados no corpo de regras que estao definidos no arquivo FDT receberao
      *  o prefixo "fdt:".
      * 
      * @param rulesForRevision
@@ -44,7 +44,7 @@ public class ForteFileGenerator {
     	List<Concept> conceitosRevisaveis = rulesForRevision;
     	conceitosRevisaveis.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
     	
-    	//Criar lista com todos os predicados que não requisitam o prefixo "fdt:"
+    	//Criar lista com todos os predicados que nao requisitam o prefixo "fdt:"
     	List<String> cabecaPredicadosTHY = new ArrayList<String>();
     	for(Concept c : conceitosRevisaveis){
     		cabecaPredicadosTHY.add(c.getNome()+"(A)");
@@ -55,7 +55,7 @@ public class ForteFileGenerator {
     	
         for(Concept c : conceitosRevisaveis){
         	/* verificar se os predicados no corpo das regras fazem parte do "rulesForRevision"
-        	 * ou do intermediatePredicates, senão, inserir "fdt:", pois o predicado se encontra
+        	 * ou do intermediatePredicates, senao, inserir "fdt:", pois o predicado se encontra
         	 * definido no arquivo FDT.
         	 */
         	int posSinalImplicacao = c.toString().indexOf(":-");
@@ -90,21 +90,21 @@ public class ForteFileGenerator {
     
     /** 
      * Gera o arquivo FDT, que informa ao FORTE o conhecimento fundamental sobre a teoria
-     * que será revisada. O arquivo FDT deverá comportar conceitos tidos como não
-     * revisáveis e todas as regras originadas de Relacionamentos (Relationship).
-     * Algumas regras revisáveis podem ser excluidas da revisão pelo usuário, neste caso
+     * que sera revisada. O arquivo FDT devera comportar conceitos tidos como nao
+     * revisaveis e todas as regras originadas de Relacionamentos (Relationship).
+     * Algumas regras revisaveis podem ser excluidas da revisao pelo usuario, neste caso
      * devem ser adicionadas ao FDT.
      * 
      * @throws IOException 
      */
     public void generateFundamentalTheory(List<Concept> rulesForRevision) throws IOException{
-        List<Concept> conceitosPrimeiroNivel = dataGenerator.retrieveFirstLevelConcepts();
+        List<Concept> conceitosAbstratos = dataGenerator.retrieveAbstractConcepts();
     	List<Concept> conceitosNegativos = dataGenerator.retrieveNegativeConcepts();
         List<Concept> conceitosRevisaveis = dataGenerator.retrieveRevisableConcepts();
         List<Relationship> relacionamentos = dataGenerator.generateRelationships();
         
         //Lista de conceitos revisaveis que o usuario optou por nao revisar
-        //Consites no conjunto de todos os conceitos revisaveis menos os selecionados
+        //Consiste no conjunto de todos os conceitos revisaveis menos os selecionados
         //para revisao e os intermediarios dos selecionados para revisao.
         List<Concept> conceitosRevisaveisExcluidos = conceitosRevisaveis;
         //exclui os selecionados
@@ -117,9 +117,9 @@ public class ForteFileGenerator {
         String conceitosFDT = "\n\n";
         String relacionamentosFDT = "\n\n";
         
-        //Escrever conceitos Não revisáveis (Conceitos de primeiro nivel)
-        for(Concept c : conceitosPrimeiroNivel){
-            conceitosFDT += c.getNome() + "(X) :- example(" + c.getNome() + "(X)" + ").\n";
+        //Escrever conceitos abstratos
+        for(Concept c : conceitosAbstratos){
+            conceitosFDT += c.toString()+ "\n";
             itensModule.add(c.getNome() + "/1, ");
         }
         
@@ -131,7 +131,7 @@ public class ForteFileGenerator {
         	}
         }
         
-        //Escrever Conceitos revisaveis excluidos da revisão
+        //Escrever Conceitos revisaveis excluidos da revisao
         for(Concept c : conceitosRevisaveisExcluidos){
         	if(conceitosFDT.contains(c.toString()) == false){
         		conceitosFDT += c.toString()+"\n";
@@ -160,14 +160,14 @@ public class ForteFileGenerator {
     }
     
     /**
-     * Gera o arquivo DAT, que informa ao FORTE os seguintes dados básicos:
+     * Gera o arquivo DAT, que informa ao FORTE os seguintes dados basicos:
      *  - top_level_predicates;
      *  - intermediate_predicates;
      *  - strata (deixar em branco);
-     *  - shielded (contem todos os predicados da teoria que não serão revisados);
+     *  - shielded (contem todos os predicados da teoria que nao serao revisados);
      *  - object_attributes;
      *  - object_relations (relacionamentos usados ocmo predicados intermediarios definidos no FDT);
-     *  - language_bias (usando padrão);
+     *  - language_bias (usando padrao);
      *  - example (positivo, negativo, Objects, fatos)
      * 
      * @throws IOException 
@@ -229,7 +229,7 @@ public class ForteFileGenerator {
     	shielded = shielded.substring(0, shielded.length()-2) + "]).";
     	
     	//Preparar Object Relations
-    	//TODO conferir se a composição do elemento está certa (é pra entrar OP mesmo?)
+    	//TODO conferir se a composiçao do elemento esta certa (é pra entrar OP mesmo?)
     	String objectRel = "object_relations([";
     	for(Relationship r : relacionamentos){
     		String v1 = "var" + dataGenerator.lowerFirstChar(r.getPrimeiroTermo().get(0));
@@ -322,7 +322,7 @@ public class ForteFileGenerator {
     
     /**
      * Gera o arquivo DOM, que informa ao FORTE os arquivos que devem ser incluídos
-     * na execução do sistema para descrever o domínio da teoria.
+     * na execuçao do sistema para descrever o domínio da teoria.
      * 
      * @throws IOException 
      */
