@@ -15,6 +15,7 @@ import br.uniriotec.orion.model.forte.resources.ConceptRestriction;
 import br.uniriotec.orion.model.forte.resources.IExample;
 import br.uniriotec.orion.model.forte.resources.ObjectAttribute;
 import br.uniriotec.orion.model.forte.resources.Relationship;
+import br.uniriotec.orion.model.forte.resources.RelationshipExample;
 
 import com.hp.hpl.jena.ontology.CardinalityRestriction;
 import com.hp.hpl.jena.ontology.DatatypeProperty;
@@ -28,6 +29,8 @@ import com.hp.hpl.jena.ontology.Restriction;
 import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
 import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
@@ -47,13 +50,13 @@ public class ForteDataGenerator {
     }
 
     /**
-     * Recupera todas as classes da ontologia e gera Conceitos com base nestas classes.
-     * Todos os DataType Properties associados a classe sao inseridos no objeto Concept criado
+     * <p>Recupera todas as classes da ontologia e gera Conceitos com base nestas classes.
+     * Todos os DataType Properties associados a classe sao inseridos no objeto Concept 
+     * criado.</p>
      *
      * @return List<Concept>
      */
     public List<Concept> generateConcepts(){
-
         List<Concept> conceptsList = new ArrayList<Concept>();
         Set<OntClass> conjClasses = parser.listarClasses();
         Set<DatatypeProperty> conjDatatypes = null;
@@ -110,6 +113,41 @@ public class ForteDataGenerator {
             	}
             }
             
+            /* Verificar todas as outras classes da ontologia e apurar se o conceito
+             * que esta sendo criado eh disjunto a alguma destas outras classes. Sendo,
+             * um axioma "disjointWith" deve ser criado. Esta geracao auxilia a evitar
+             * que regras fiquem sem corpo, pois assume-se que caso nao haja nada
+             * especifico para definir uma classe, ela ao menos eve ser disjunta de
+             * outras classes.
+             */
+            for(OntClass c : conjClasses){
+            	if(c.getDisjointWith() != null){
+                    //iterador em cima de todas as classes disjuntas
+                    Iterator<OntClass> it = c.listDisjointWith();
+                    OntClass aux = null;
+                    while(it.hasNext()){
+                        aux = it.next();
+                        //Se aux == ontClass entao o conceito (ontClass) e a 
+                        //classe iterada (c) sao disjuntas
+                        if(aux.getLocalName().equalsIgnoreCase(ontClass.getLocalName())){
+                        	//Criacao do conceito negativo e verificacao para adicao
+                            Concept conceitoNeg = criarConceitoNegativo(c);
+                            if(isConceptInList(conceitoNeg, conceptsList) == false){
+                            	conceptsList.add(conceitoNeg);	
+                            }
+                            
+                           //adiciona a referencia de disjuncao
+                            ConceptAxiom axioma = new ConceptAxiom();
+                            axioma.setNome("disjointWith");
+                            axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
+
+                            tmpConcept.addConceptAxiom(axioma);
+                        }
+                    }
+                }
+            }
+            
+            
             
             /* Recupera todos os axiomas subClassOf da classe, identifica qual
              * faz referencia a classe pai e adiciona aos axiomas do conceito.
@@ -137,29 +175,6 @@ public class ForteDataGenerator {
                        List<ConceptRestriction> relacionamentosSup = recuperarRelacionamentosSup(aux);
                        for(ConceptRestriction conRest : relacionamentosSup){
                     	   tmpConcept.addConceptRestriction(conRest);
-                    	   
-//                    	   //Verificar se existe mais de uma classe no range do OP e criar disjoints
-//                    	   ObjectProperty op = parser.recuperarObjectProperty(conRest.getNomeProperty());
-//                    	   if(op.getRange().asClass().isUnionClass()){
-//                    		   UnionClass uniao = op.getRange().asClass().asUnionClass();
-//                               ExtendedIterator<? extends OntClass> iterador = uniao.listOperands();
-//                               while(iterador.hasNext()){
-//                                   OntClass classe = (OntClass) iterador.next();
-//                                   if(classe.getLocalName().equals(ontClass.getLocalName()) == false){
-//                                	   
-//                                	   //Criacao e adicao do conceito negativo a lista de conceitos
-//                                       Concept conceitoNeg = criarConceitoNegativo(classe);
-//                                       conceptsList.add(conceitoNeg);	
-//                                       
-//                                       //adiciona a referencia de disjuncao
-//                                       ConceptAxiom cAxioma = new ConceptAxiom();
-//                                       cAxioma.setNome("disjointWith");
-//                                       cAxioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
-//                                       
-//                                       tmpConcept.addConceptAxiom(cAxioma);
-//                                   }
-//                               }
-//                    	   }
                        }
                    }else{ //eh um restriction
                        Restriction restriction = aux.asRestriction();
@@ -176,8 +191,10 @@ public class ForteDataGenerator {
                                if(classe.getLocalName().equals(ontClass.getLocalName()) == false){
                             	   
                             	   //Criacao e adicao do conceito negativo a lista de conceitos
-                                   Concept conceitoNeg = criarConceitoNegativo(classe);
-                                   conceptsList.add(conceitoNeg);	
+                            	   Concept conceitoNeg = criarConceitoNegativo(classe);
+                                   if(isConceptInList(conceitoNeg, conceptsList) == false){
+                                   	conceptsList.add(conceitoNeg);	
+                                   }	
                                    
                                    //adiciona a referencia de disjuncao
                                    ConceptAxiom cAxioma = new ConceptAxiom();
@@ -212,7 +229,9 @@ public class ForteDataGenerator {
 
                     //Criacao e adicao do conceito negativo a lista de conceitos
                     Concept conceitoNeg = criarConceitoNegativo(aux);
-                    conceptsList.add(conceitoNeg);	
+                    if(isConceptInList(conceitoNeg, conceptsList) == false){
+                    	conceptsList.add(conceitoNeg);	
+                    }
                     
                     //adiciona a referencia de disjuncao
                     ConceptAxiom axioma = new ConceptAxiom();
@@ -248,24 +267,32 @@ public class ForteDataGenerator {
 
             conceptsList.add(tmpConcept);
         }
-
+        
+        
         return conceptsList;
     }
 	
 
-	
-
 	/**
-     * Metodo para auxiliar a retornar somente os conceitos da ontologia que sao
+     * <p>Metodo para auxiliar a retornar somente os conceitos da ontologia que sao
      * revisaveis. O metodo recupera a lista gerada pelo metodo "generateConceps"
-     * e retira aqueles que foram criados como auxaliares, possuindo o prefixo "nao",
-     * que sao conceitos abstratos e que possuem o axioma EquivalentClass.
+     * para recuperar todos os conceitos e entao aplica filtros para validar aqueles
+     * que sao passiveis de revisao. Para um conceito ser revisavel ele:
+     * <ol>
+     * 	<li>Nao pode ser um conceito criado para negacao (iniciado por "nao")</li>
+     *  <li>Nao pode ser um conceito abstrato</li>
+     *  <li>Nao pode ser um conceito sem qualquer axioma</li>
+     *  <li>Deve ter pelo menos um axioma indicando disjuncao de outros conceitos 
+     *  	("disjointWith")</li>
+     *  <li>Nao pode possuir axiomas "equivalentClass" ou ser citado por outros conceitos 
+     *  	como um "equivalentClass"</li>
+     * </ol>
+     * </p>
+     * <p>OBS: caso nao haja qualquer axioma de classe o conceito e tido como nao
+     * revisavel, ja que nao possuir um axioma subClassOf indica ser filho de "Thing".
+     * </p>
      * 
-     * OBS: caso nao haja qualquer axioma de classe o conceito e tido como nao
-     * revisavel, ja que nao possuir um axioma subClassOf indica ser filho de
-     * "Thing".
-     * 
-     * @return 
+     * @return List<Concept>
      */
     public List<Concept> retrieveRevisableConcepts(){
         List<Concept> conceitos = generateConcepts();
@@ -273,25 +300,30 @@ public class ForteDataGenerator {
         List<String> classesEquivalentes = new ArrayList<String>();
         for(Concept c : conceitos){
             String prefixo = c.getNome().substring(0, 3);
-            if(prefixo.equals("nao") == false){
-                boolean conceitoRevisavel = true;
-            	if(c.isAbstractConcept()){
-            		conceitoRevisavel = false;
-            	}else if(c.getAxiomas() == null){
-            		//Conceitos que nao sao abstratos e nao tem subclasses, disjoint, etc.
-            		conceitoRevisavel = false;
-                }else{
-                    for(ConceptAxiom ca : c.getAxiomas()){
-                        if(ca.getNome().equals("equivalentClass")){
-                            conceitoRevisavel = false;
-                            classesEquivalentes.add(ca.getValor());
-                        }
+            boolean conceitoRevisavel = false;
+            //Se for um conceito de negacao, for abstrato ou nao possuir axiomas, nao eh revisavel
+            if(prefixo.equals("nao") || c.isAbstractConcept() || c.getAxiomas() == null){
+            	conceitoRevisavel = false;
+            }else{
+                for(ConceptAxiom ca : c.getAxiomas()){
+                    //Se possuir um axioma "disjointWith" possivelmente eh revisavel
+                	if(ca.getNome().equals("disjointWith")){
+                    	conceitoRevisavel = true;
                     }
                 }
-            	
-                if(conceitoRevisavel){
-                	listaRetorno.add(c);
+                for(ConceptAxiom ca : c.getAxiomas()){
+	                //Se possuir um axioma "equivalentClass", mesmo que tenha
+	                //"disjointWith", nao eh revisavel
+	        		if(ca.getNome().equals("equivalentClass")){
+	                    conceitoRevisavel = false;
+	                    classesEquivalentes.add(ca.getValor());
+	                }
                 }
+            }
+            
+            //Se o conceito for revisavel, entao inseri-lo na lista de revisaveis
+            if(conceitoRevisavel){
+            	listaRetorno.add(c);
             }
         }
         
@@ -326,7 +358,6 @@ public class ForteDataGenerator {
         todosConceitos.removeAll(conceitosRevisaveis);
         return todosConceitos;
     }
-    
     
     /**
      * Metodo para recuperar todos os conceitos abstratos da ontologia.
@@ -367,7 +398,6 @@ public class ForteDataGenerator {
     	}
     	return negativeConcepts;
     }
-    
     
     /**
      * recupera todos os objetos ObjectProperty da ontologia e cria objetos
@@ -632,7 +662,9 @@ public class ForteDataGenerator {
     
     /**
      * <p>Metodo responsavel por gerar os intermediate_predicates no arquivo .DAT.
-     * Um predicado e intermediate quando aparece no corpo de outra regra.</p>
+     * Um predicado eh intermediate quando for um predicado revisavel e aparecer
+     * no corpo de uma regra que se encontra selecionada para revisao, ou seja,
+     * estiver inclusa entre os top_level_predicates.</p>
      */
     public List<Concept> generateIntermediatePredicates(List<Concept> topLevelConcepts){
     	List<Concept> conceitosRevisaveis = new ArrayList<Concept>();
@@ -642,16 +674,16 @@ public class ForteDataGenerator {
     	conceitosRevisaveis.addAll(retrieveRevisableConcepts());
     	possibleIntermediateConcepts.addAll(conceitosRevisaveis);
     	
-    	//Primeiramente remover todos que nao sao top_level
+    	//Primeiramente remover todos que sao top_level
     	possibleIntermediateConcepts.removeAll(topLevelConcepts);
     	//refinar deixando somente os conceitos que sao de fato predicados 
     	//intermediarios dos conceitos no top_level
     	for(Concept cInter : possibleIntermediateConcepts){
     		boolean isIntermediate = false;
     		for(Concept cTop : topLevelConcepts){
-    			List<ConceptAxiom> axiomas = cTop.getAxiomas();
-    			for(ConceptAxiom a : axiomas){
-    				if(cInter.getNome().equalsIgnoreCase(a.getValor())){
+    			List<ConceptRestriction> restrictions = cTop.getRestrictions();
+    			for(ConceptRestriction r : restrictions){
+    				if(cInter.getNome().equalsIgnoreCase(r.getValorRestriction())){
     					isIntermediate = true;
     				}
     			}
@@ -661,20 +693,25 @@ public class ForteDataGenerator {
     		}
     	}
     	
-    	//TODO verificar se relacionamentos podem ser intermediates  ou se todos devem ir para o FDT
     	return trueIntermediates;
     }
     
     /**
      * Este método gera os fatos utilizados pelo FORTE para provar os exemplos positivos e negar
-     * os exemplos negativos. 
+     * os exemplos negativos. As seguntes abordagens sao utilizadas para gerar os fatos:
      * 
      * 	1) Os fatos com base nas instancias de conceitos que nao estao sofrendo revisao.
-     * 		Estes fatos sao representados por objetos do tipo ConceptExample.
+     * 	Estes fatos sao representados por objetos do tipo ConceptExample.
      * 
-     * OBS: Nao se faz necessario gerar fatos com base nos relacionamentos pois os mesmos sao 
-     * comprovados atraves das regras dos relacionamentos, que eventalmente recairao sobre fatos
-     * sobre conceitos. 
+     *  2) Os fato com base nos relacionamentos. Considera-se que toda classe "nao abstrata"
+     *  que possui uma restriction fazendo referencia a um relacionamento viabiliza a 
+     *  criacao de fatos sobre este relacionamento, portanto com base nas instancias de 
+     *  classes nao abstratas eh possivel gerar exemplos de relacionamentos.
+     *  
+     *  OBS: Caso existam relacionamentos que sao unicamente referenciados por classes
+     *  abstratas se faz impossivel a geracao de exemplos, entretanto como a o relacionamento
+     *  acabara nao sendo invocado por nenhuma regra sendo revisada a ausencia de exemplos
+     *  nao devera impactar no processo de revisao e refinamento. 
      * 
      */
     public List<IExample> generateFacts(List<Concept> selectedConcepts){
@@ -685,16 +722,42 @@ public class ForteDataGenerator {
     	//Conjunto com as instancias dos conceitos selecionados para revisao
         Set<Individual> conjIndividualsSelected = new HashSet<Individual>();
         
-        //verificar se existem instancias, nao existindo acaba o processamento
+        /*
+         * verificar se existem instancias na ontologia. Nao existindo se torna
+         * impossivel gerar fatos sobre os conceitos. Uma vez que nao se tem
+         * instancias e tambem impossivel gerar fatos sobre relacionamentos,
+         * dado que estes sao retirados das instancias. Neste caso o metodo
+         * eh rapidamente encerrado.
+         */
         if(conjIndividuals.isEmpty()){
             return null;
         }
         
         
         /*
+         * Gerar fatos com base nos relacionamentos. Passa-se por todo o conjunto de 
+         * isntancias e procura-se em cada uma delas por relacionamentos. Uma vez encontrado
+         * criase um objeto RelationshipExample que armazena o nome do relacionamento e os
+         * dois termos referidos por ele.
+         */
+        for(Individual i :conjIndividuals){
+        	StmtIterator it = i.listProperties();
+        	while(it.hasNext()){
+        		Statement p = it.next();
+        		if((p.getObject().isResource()) && (p.getPredicate().getLocalName().equalsIgnoreCase("type") == false)){
+        			RelationshipExample ex = new RelationshipExample();
+		        		ex.setPredicado(lowerFirstChar(p.getPredicate().getLocalName()));
+		        		ex.setPrimeiroTermo(lowerFirstChar(p.getSubject().getLocalName()));
+		        		ex.setSegundoTermo(lowerFirstChar(p.getObject().asResource().getLocalName()));
+		        	conjFacts.add(ex);
+        		}
+        	}
+        }
+        
+        /*
          * Gerar fatos com base nos conceitos. Para isto separam-se os conceitos que
-         * estao sendo revisados daqueles foram excluidos da revisao. Fatos serao gerados
-         * somente com base em conceitos nao revisados.
+         * estao sendo revisados daqueles foram excluidos da revisao. Fatos sobre 
+         * conceitos serao gerados somente com base em conceitos nao revisados.
          */
         for(Individual i :conjIndividuals){
         	boolean isSelected = false;
@@ -775,6 +838,26 @@ public class ForteDataGenerator {
 
     }
     
+    /**
+     * Metodo para verificar se um conceito faz parte de uma lista de conceitos.
+     * O metodo eh particularmente utilizado durante a geracao de conceitos pelo
+     * metodo generateConcept(), pois eh possivel que o mesmo conceito negativo
+     * seja gerado mais de uma vez, portanto antes que ele seja inserido na lista
+     * de conceitos a serem retornados verifica-se se este ja se encontra incluso.
+     * 
+     * @param concept
+     * @param conceptsList
+     * @return
+     */
+    private boolean isConceptInList(Concept concept, List<Concept> conceptsList) {
+		boolean isInList = false;
+    	for(Concept c : conceptsList){
+			if(c.getNome().equals(concept.getNome())){
+				isInList = true;
+			}
+		}
+		return isInList;
+	}
 
     @SuppressWarnings("rawtypes")
 	private List<String> recuperarDomainsDatatype(DatatypeProperty datatype) {
@@ -884,7 +967,6 @@ public class ForteDataGenerator {
         conceitoNeg.addConceptAxiom(axiomaNeg);
         return conceitoNeg;
 	}
-    
     
     /**
      * Metodo para transformar o primeiro caracter de uma string em minusculo

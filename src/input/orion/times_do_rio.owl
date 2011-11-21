@@ -457,6 +457,7 @@
 
     <owl:Class rdf:about="#Time">
         <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <owl:disjointWith rdf:resource="#Torcida"/>
     </owl:Class>
     
 

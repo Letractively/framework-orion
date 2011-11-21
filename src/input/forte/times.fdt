@@ -1,10 +1,24 @@
-:- module(fdt, [presidente/1, titular/1, naoapelido_Time/1, naopatrocinador/1, apelido_Torcida/1, naopessoa/1, refereseTorcida/2, naotime/1, funcionario/1, pertenceTime/2, pessoa/1, naopresidente/1, patrocina/2, naotecnico/1, naotitular/1, naomembro_Comissao_Tecnica/1, naoestadio/1, tecnico/1, apelido_Pessoa/1, jogador_Aposentado/1, patrocinador/1, torcePorTime/2, refereseTime/2, naotorcida/1, apelido/1, time/1, membro_Comissao_Tecnica/1, jogaEmTime/2, estadio/1, torcedor/1, trabalhaEm/2, referesePessoa/2, naotorcedor/1, torcida/1, naoapelido_Torcida/1, jogador/1, naomascote/1, comandaClube/2, simboliza/2]).
+:- module(fdt, [naoapelido_Pessoa/1, titular/1, naoapelido_Time/1, naopatrocinador/1, apelido_Torcida/1, naopessoa/1, refereseTorcida/2, naotime/1, funcionario/1, pertenceTime/2, pessoa/1, naopresidente/1, patrocina/2, naotecnico/1, naotitular/1, naomembro_Comissao_Tecnica/1, naoestadio/1, tecnico/1, apelido_Pessoa/1, naoapelido/1, jogador_Aposentado/1, patrocinador/1, torcePorTime/2, refereseTime/2, naotorcida/1, apelido/1, naojogador_Aposentado/1, jogaEmTime/2, estadio/1, torcedor/1, trabalhaEm/2, referesePessoa/2, naotorcedor/1, naoapelido_Torcida/1, jogador/1, naomascote/1, comandaClube/2, simboliza/2]).
 
-apelido(A) :-  apelido_Pessoa(A). apelido(A) :-  apelido_Time(A). apelido(A) :-  apelido_Torcida(A). 
-funcionario(A) :-  presidente(A). funcionario(A) :-  membro_Comissao_Tecnica(A). funcionario(A) :-  tecnico(A). 
-jogador(A) :-  jogador_Aposentado(A). jogador(A) :-  titular(A). 
-pessoa(A) :-  funcionario(A). pessoa(A) :-  jogador(A). pessoa(A) :-  torcedor(A). 
+apelido(A) :-  apelido_Pessoa(A). 
+apelido(A) :-  apelido_Time(A). 
+apelido(A) :-  apelido_Torcida(A). 
+
+funcionario(A) :-  presidente(A). 
+funcionario(A) :-  membro_Comissao_Tecnica(A). 
+funcionario(A) :-  tecnico(A). 
+
+jogador(A) :-  jogador_Aposentado(A). 
+jogador(A) :-  titular(A). 
+
+pessoa(A) :-  funcionario(A). 
+pessoa(A) :-  jogador(A). 
+pessoa(A) :-  torcedor(A). 
+
+
+naoapelido_Pessoa(A) :-  \+ apelido_Pessoa(A).
 naoapelido_Torcida(A) :-  \+ apelido_Torcida(A).
+naomembro_Comissao_Tecnica(A) :-  \+ membro_Comissao_Tecnica(A).
 naotecnico(A) :-  \+ tecnico(A).
 naotorcida(A) :-  \+ torcida(A).
 naotime(A) :-  \+ time(A).
@@ -12,32 +26,31 @@ naopessoa(A) :-  \+ pessoa(A).
 naopatrocinador(A) :-  \+ patrocinador(A).
 naomascote(A) :-  \+ mascote(A).
 naoestadio(A) :-  \+ estadio(A).
+naoapelido(A) :-  \+ apelido(A).
 naotorcedor(A) :-  \+ torcedor(A).
 naopresidente(A) :-  \+ presidente(A).
-naomembro_Comissao_Tecnica(A) :-  \+ membro_Comissao_Tecnica(A).
+naojogador_Aposentado(A) :-  \+ jogador_Aposentado(A).
 naoapelido_Time(A) :-  \+ apelido_Time(A).
 naotitular(A) :-  \+ titular(A).
-presidente(A) :-  naotecnico(A), comandaClube(A,B), time(B).
-torcida(A) :-  naotorcedor(A), torcePorTime(A,B), time(B).
-membro_Comissao_Tecnica(A) :-  naotecnico(A), naopresidente(A), trabalhaEm(A,B), time(B).
-tecnico(A) :-  naomembro_Comissao_Tecnica(A), trabalhaEm(A,B), time(B).
-titular(A) :-  jogaEmTime(A,B), time(B).
-estadio(A) :-  naotorcida(A), naotime(A), naopessoa(A), naopatrocinador(A), naomascote(A), pertenceTime(A,B), time(B).
-apelido_Pessoa(A) :-  naoapelido_Torcida(A), naoapelido_Time(A), referesePessoa(A,B), pessoa(B).
-apelido_Torcida(A) :-  refereseTorcida(A,B), torcida(B).
-jogador_Aposentado(A) :-  naotitular(A), jogaEmTime(A,B), time(B).
-time(A) :-.
-patrocinador(A) :-  naotorcida(A), naotime(A), naopessoa(A), patrocina(A,B), time(B).
-torcedor(A) :-  naotorcida(A), torcePorTime(A,B), time(B).
+
+tecnico(X) :- example(tecnico(X)).
+titular(X) :- example(titular(X)).
+estadio(X) :- example(estadio(X)).
+apelido_Pessoa(X) :- example(apelido_Pessoa(X)).
+apelido_Torcida(X) :- example(apelido_Torcida(X)).
+jogador_Aposentado(X) :- example(jogador_Aposentado(X)).
+patrocinador(X) :- example(patrocinador(X)).
+torcedor(X) :- example(torcedor(X)).
 
 
-referesePessoa(a,b) :- apelido_Pessoa(a), pessoa(b).
-refereseTorcida(a,b) :- apelido_Torcida(a), torcida(b).
-torcePorTime(a,b) :- torcedor(a), time(b). torcePorTime(a,b) :- torcida(a), time(b).
-comandaClube(a,b) :- presidente(a), time(b).
-pertenceTime(a,b) :- estadio(a), time(b).
-refereseTime(a,b) :- apelido_Time(a), time(b).
-trabalhaEm(a,b) :- membro_Comissao_Tecnica(a), time(b). trabalhaEm(a,b) :- tecnico(a), time(b).
-simboliza(a,b) :- mascote(a), time(b).
-jogaEmTime(a,b) :- jogador(a), time(b).
-patrocina(a,b) :- patrocinador(a), time(b).
+
+referesePessoa(A,B) :- example(referesePessoa(A,B)).
+refereseTorcida(A,B) :- example(refereseTorcida(A,B)).
+torcePorTime(A,B) :- example(torcePorTime(A,B)).
+comandaClube(A,B) :- example(comandaClube(A,B)).
+pertenceTime(A,B) :- example(pertenceTime(A,B)).
+refereseTime(A,B) :- example(refereseTime(A,B)).
+trabalhaEm(A,B) :- example(trabalhaEm(A,B)).
+simboliza(A,B) :- example(simboliza(A,B)).
+jogaEmTime(A,B) :- example(jogaEmTime(A,B)).
+patrocina(A,B) :- example(patrocina(A,B)).
