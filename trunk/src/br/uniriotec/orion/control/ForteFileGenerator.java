@@ -24,6 +24,9 @@ public class ForteFileGenerator {
 	
 	private ForteDataGenerator dataGenerator;
 	
+	@SuppressWarnings("unused")
+	private ForteFileGenerator(){}
+	
 	public ForteFileGenerator(String inputFile){
 		this.dataGenerator = new ForteDataGenerator(inputFile);
 	}
@@ -47,7 +50,7 @@ public class ForteFileGenerator {
     	//Criar lista com todos os predicados que nao requisitam o prefixo "fdt:"
     	List<String> cabecaPredicadosTHY = new ArrayList<String>();
     	for(Concept c : conceitosRevisaveis){
-    		cabecaPredicadosTHY.add(c.getNome()+"(A)");
+    		cabecaPredicadosTHY.add(c.getNome());
     	}
     	
     	//Preparar arquivo THY para escrita
@@ -60,15 +63,22 @@ public class ForteFileGenerator {
         	 */
         	int posSinalImplicacao = c.toString().indexOf(":-");
         	String cabecaRegra = c.toString().substring(0, posSinalImplicacao-1);
+        	//Separar o corpo da regra
         	String corpoRegra = c.toString().substring(posSinalImplicacao+3, c.toString().length());
-        	String corpoRegraPrefixado = "";
-        	
+        	//Tirar espacoes anteriores e posteriores
+        	corpoRegra = corpoRegra.trim();
+        	//retirar o ponto final
+       		corpoRegra = corpoRegra.substring(0, corpoRegra.length()-1);
+        	//Separar em um array cada predicado
         	String[] arrayPredicadosCorpoRegra = corpoRegra.split(", ");
         	
+        	String corpoRegraPrefixado = "";
+        	
         	for(String s : arrayPredicadosCorpoRegra){
+        		String temp = s.substring(0, s.indexOf("("));
         		boolean isCabeca = false;
         		for(String cabecaPred : cabecaPredicadosTHY){
-        			if(cabecaPred.equals(s)){
+        			if(cabecaPred.equals(temp)){
         				isCabeca = true;
             		}	
         		}
@@ -80,7 +90,7 @@ public class ForteFileGenerator {
         	}
         	
         	//trocar ultimo ", " por "."
-        	corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2);
+        	corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2) + ".";
         	
         	//Escrever a regra no arquivo
             writter.append(cabecaRegra+" :- "+corpoRegraPrefixado+"\n");
@@ -114,7 +124,7 @@ public class ForteFileGenerator {
         
         String moduloFDT = ":- module(fdt, [";
         Set<String> itensModule = new HashSet<String>();
-        String conceitosFDT = "\n\n";
+        String conceitosFDT = "\n";
         String relacionamentosFDT = "\n\n";
         
         //Escrever conceitos abstratos
@@ -122,22 +132,21 @@ public class ForteFileGenerator {
             conceitosFDT += c.toString()+ "\n";
             itensModule.add(c.getNome() + "/1, ");
         }
+        conceitosFDT += "\n";
         
         //Escrever conceitos negativos gerados pelo axioma disjointWith
         for(Concept c : conceitosNegativos){
-        	if(conceitosFDT.contains(c.toString()) == false){
         		conceitosFDT += c.toString()+"\n";
                 itensModule.add(c.getNome() + "/1, ");
-        	}
         }
+        conceitosFDT += "\n";
         
         //Escrever Conceitos revisaveis excluidos da revisao
         for(Concept c : conceitosRevisaveisExcluidos){
-        	if(conceitosFDT.contains(c.toString()) == false){
-        		conceitosFDT += c.toString()+"\n";
+        		conceitosFDT += c.getNome()+"(X) :- example("+c.getNome()+"(X)).\n";
                 itensModule.add(c.getNome() + "/1, ");
-        	}
         }
+        conceitosFDT += "\n";
         
         //Escrever relacionamentos
         for(Relationship r : relacionamentos){
@@ -150,7 +159,7 @@ public class ForteFileGenerator {
         	moduloFDT += s;
         }
         
-        moduloFDT = moduloFDT.substring(0, moduloFDT.length()-2) + "]).";
+        moduloFDT = moduloFDT.substring(0, moduloFDT.length()-2) + "]).\n";
         
         BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.fdt"));
         writter.append(moduloFDT);
@@ -198,54 +207,81 @@ public class ForteFileGenerator {
     		variaveis.add(variavel);
     	}
     	
+    	
+    	
     	/*======================================+
     	 * 		Preparar Texto para escrita		*
     	 *======================================*/
     	
     	//Preparar Top Level Predicate
     	String top_level = "top_level_predicates([";
-    	for(String s : topLevelPredicates){
-    		top_level += s+", ";
-        }
-    	top_level = top_level.substring(0, top_level.length()-2) + "]).";
+    	if(topLevelPredicates.size() != 0){
+    		for(String s : topLevelPredicates){
+        		top_level += s+", ";
+            }
+        	top_level = top_level.substring(0, top_level.length()-2);
+    	}
+    	top_level += "]).";
+    	
+    	
     	
     	//Preparar Intermediate Predicate
     	String intermediate = "intermediate_predicates([";
-    	for(String s : intermediatePredicates){
-    		intermediate += s+", ";
-        }
-    	intermediate = intermediate.substring(0, intermediate.length()-2) + "]).";
+    	if(intermediatePredicates.size() != 0){
+    		for(String s : intermediatePredicates){
+        		intermediate += s+", ";
+            }
+        	intermediate = intermediate.substring(0, intermediate.length()-2);
+    	}
+    	intermediate += "]).";
 
+    	
+    	
     	//Preparar Strata
     	String strata = "strata([]).";
+    	
+    	
     	
     	//Preparar Shielded
     	String shielded = "shielded([";
     	List<Concept> conjuntoRegrasNaoRevisadas = dataGenerator.retrieveRevisableConcepts();
     	conjuntoRegrasNaoRevisadas.removeAll(rulesForRevision);
-    	for(Concept c : conjuntoRegrasNaoRevisadas){
-    		shielded += c.getNome()+"(_), ";
+    	if(conjuntoRegrasNaoRevisadas.size() != 0){
+    		for(Concept c : conjuntoRegrasNaoRevisadas){
+        		shielded += c.getNome()+"(_), ";
+        	}
+        	shielded = shielded.substring(0, shielded.length()-2);
     	}
-    	shielded = shielded.substring(0, shielded.length()-2) + "]).";
+    	shielded += "]).";
+    	
+    	
     	
     	//Preparar Object Relations
-    	//TODO conferir se a composiçao do elemento esta certa (é pra entrar OP mesmo?)
     	String objectRel = "object_relations([";
-    	for(Relationship r : relacionamentos){
-    		String v1 = "var" + dataGenerator.lowerFirstChar(r.getPrimeiroTermo().get(0));
-    		String v2 = "var" + dataGenerator.lowerFirstChar(r.getSegundoTermo());
-    		objectRel += r.getNome()+ "(" + v1 + "," + v2 + "), ";
-    		variaveis.add(v1);
-    		variaveis.add(v2);
+    	if(relacionamentos.size() != 0){
+    		for(Relationship r : relacionamentos){
+        		String v1 = "var" + dataGenerator.lowerFirstChar(r.getPrimeiroTermo().get(0));
+        		String v2 = "var" + dataGenerator.lowerFirstChar(r.getSegundoTermo());
+        		objectRel += r.getNome()+ "(" + v1 + "," + v2 + "), ";
+        		variaveis.add(v1);
+        		variaveis.add(v2);
+        	}
+        	objectRel = objectRel.substring(0, objectRel.length()-2);
     	}
-    	objectRel = objectRel.substring(0, objectRel.length()-2) + "]).";
+    	objectRel += "]).";
+    	
+    	
     	
     	//Preparar Object Attribute
     	String objectAttr = "object_attributes([";
-    	for(String v : variaveis){
-    		objectAttr += v+"([]), ";
+    	if(variaveis.size() != 0){
+    		for(String v : variaveis){
+        		objectAttr += v+"([]), ";
+        	}
+        	objectAttr = objectAttr.substring(0, objectAttr.length()-2);
     	}
-    	objectAttr = objectAttr.substring(0, objectAttr.length()-2) + "]).";
+    	objectAttr += "]).";
+    	
     	
     	
     	//Preparar Exemplos Positivos
@@ -259,6 +295,8 @@ public class ForteFileGenerator {
     	}
     	exemplosPositivos += "]";
     	
+    	
+    	
     	//Preparar Exemplos negativos
     	List<IExample> exemplosNegativosList = dataGenerator.generateNegativeExamples(regrasParaRevisao);
     	String exemplosNegativos = "[";
@@ -270,9 +308,9 @@ public class ForteFileGenerator {
     	}
     	exemplosNegativos += "]";
     	
-    	//Preparar Objects
-    	/* 
-    	 * REVER TODA ESTA IDEIA APOS REUNIAO COM A KATE SOBRE A IDEIA DO "ISA"
+    	
+    	
+    	/* Preparar Objects
     	 * 
     	 * - Recuperar as variaveis usadas no Object_attributes
     	 * - Para cada variavel recuperar instancias do conceito representado
@@ -280,10 +318,15 @@ public class ForteFileGenerator {
     	 * de acordo com a ordem descrita nas variaveis.
     	 */
     	String objects = "[";
-    	for(String v : variaveis){
-    		objects += v+"([]), ";
+    	if(variaveis.size() != 0){
+			for(String v : variaveis){
+	    		objects += v+"([]), ";
+	    	}
+    		objects = objects.substring(0, objects.length()-2);
     	}
-    	objects = objects.substring(0, objects.length()-2) + "]";
+    	objects += "]";
+    	
+    	
     	
     	//Preparar Fatos
     	List<IExample> factsList = dataGenerator.generateFacts(regrasParaRevisao);
@@ -296,6 +339,8 @@ public class ForteFileGenerator {
     	}
     	facts += "]";
     	
+    	
+    	
     	//Realizar a escrita em arquivo
     	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.dat"));
         writter.append(top_level+"\n\n");
@@ -306,6 +351,9 @@ public class ForteFileGenerator {
         writter.append(objectRel+"\n\n");
         writter.append("language_bias([depth_limit(5), use_attr, use_relations, " +
         		"use_theory, use_built_in, relation_tuning(highly_relational)]).\n\n");
+        
+        
+        
         //Escrever dados
         writter.append("example(\n");
         	//Exemplos Positivos

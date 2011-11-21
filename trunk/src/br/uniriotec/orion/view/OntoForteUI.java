@@ -12,9 +12,9 @@ import br.uniriotec.orion.control.ForteFileGenerator;
 import br.uniriotec.orion.model.forte.resources.Concept;
 
 /**
- * <p>Classe responsável por realizar a interface com o usuário. Através desta classe é
- * possível dar entrada em uma ontologia no formato OWL/RDF e como output obtem-se um conjunto de
- * três arquivos que serão utilizados como input pelo FORTE.</p>
+ * <p>Classe responsavel por realizar a interface com o usuario. Atraves desta classe eh
+ * possivel dar entrada em uma ontologia no formato OWL/RDF e como output obtem-se um conjunto de
+ * tres arquivos que serão utilizados como input pelo FORTE.</p>
  * 
  * @author Felipe
  */
@@ -34,15 +34,15 @@ public class OntoForteUI {
         }
         
         /******************************************
-         ** Simular que os 4 primeiros conceitos ** 
+         ** Simular que os 5 primeiros conceitos ** 
          ** foram escolhidos para revisao        **
          ******************************************/
         List<Concept> conceitosParaRevisao = new ArrayList<Concept>();
-//        for(int i=0; i<4; i++){
-//            conceitosParaRevisao.add(conceitosRevisaveis.get(i));
-//        }
-        conceitosParaRevisao.add(conceitosRevisaveis.get(0));
-        conceitosParaRevisao.add(conceitosRevisaveis.get(4));
+        for(int i=0; i<5; i++){
+            conceitosParaRevisao.add(conceitosRevisaveis.get(i));
+        }
+//        conceitosParaRevisao.add(conceitosRevisaveis.get(0));
+//        conceitosParaRevisao.add(conceitosRevisaveis.get(2));
         System.out.println("\n=== Regras escolhidas para revisao ===");
         for(Concept c : conceitosParaRevisao){
             System.out.println(c);

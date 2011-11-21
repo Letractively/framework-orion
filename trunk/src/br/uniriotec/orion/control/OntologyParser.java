@@ -77,7 +77,7 @@ public class OntologyParser extends Object {
         //Criar um iterador com as classes da ontologia
         ExtendedIterator<OntClass> classIterator = ontologia.listClasses();
         Set<OntClass> classes = new HashSet<OntClass>();
-        //Objeto auxiliar para verificar se é uma classe anonima
+        //Objeto auxiliar para verificar se eh uma classe anonima
         OntClass aux = null;
         //para cada passo do iterador recupera-se a classe apontada e lista-se
         while (classIterator.hasNext()){
@@ -86,7 +86,7 @@ public class OntologyParser extends Object {
                 classes.add(aux);
             }
         }
-
+        
         return classes;
 
     }

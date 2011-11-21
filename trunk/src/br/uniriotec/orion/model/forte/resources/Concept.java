@@ -45,7 +45,7 @@ public class Concept extends ForteResource {
                 for(ConceptAxiom axioma : axiomas){
                     //Se for um axioma superClassOf
                     if(axioma.getNome().equals("superClassOf")){
-                    	regras += texto + axioma.getValor() + "(" + varPrincipal + "). ";
+                    	regras += texto + axioma.getValor() + "(" + varPrincipal + "). \n";
                     }
                 }
             }
@@ -61,16 +61,17 @@ public class Concept extends ForteResource {
         if(axiomas != null){
             for(ConceptAxiom axioma : axiomas){
             	//Se for um axioma subClassOf
+            	//Este codigo eh responsavel por escrever conceitos negativos no FDT
                 if(axioma.getNome().equals("subClassOf")){
                     if(nome.subSequence(0, 3).equals("nao")){
-                    	texto += axioma.getValor() + "("+ varPrincipal +"), ";
+                        texto += axioma.getValor() + "("+ varPrincipal +"), ";
                     }
                 }
                 //Se for um axioma disjointWith
                 if(axioma.getNome().equals("disjointWith")){
-                	String novoAxioma = axioma.getValor() + "(" + varPrincipal + "), ";
-                	if(texto.contains(novoAxioma) == false){
-                		texto += novoAxioma;
+                	String axiomaDisjoint = axioma.getValor() + "(" + varPrincipal + "), ";
+                	if(texto.contains(axiomaDisjoint) == false){
+                		texto += axiomaDisjoint;
                 	}
                 }
 
