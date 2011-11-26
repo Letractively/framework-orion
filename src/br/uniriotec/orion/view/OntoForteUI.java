@@ -38,7 +38,7 @@ public class OntoForteUI {
          ** foram escolhidos para revisao        **
          ******************************************/
         List<Concept> conceitosParaRevisao = new ArrayList<Concept>();
-        for(int i=0; i<5; i++){
+        for(int i=0; i<3; i++){
             conceitosParaRevisao.add(conceitosRevisaveis.get(i));
         }
 //        conceitosParaRevisao.add(conceitosRevisaveis.get(0));
