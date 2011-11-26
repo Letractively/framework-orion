@@ -1,46 +1,7 @@
-:- module(fdt, [naoapelido_Pessoa/1, titular/1, naoapelido_Time/1, naopatrocinador/1, apelido_Torcida/1, naopessoa/1, refereseTorcida/2, naotime/1, funcionario/1, pertenceTime/2, pessoa/1, naopresidente/1, patrocina/2, naotecnico/1, naotitular/1, naomembro_Comissao_Tecnica/1, naoestadio/1, tecnico/1, apelido_Pessoa/1, naoapelido/1, jogador_Aposentado/1, patrocinador/1, torcePorTime/2, refereseTime/2, naotorcida/1, apelido/1, naojogador_Aposentado/1, jogaEmTime/2, estadio/1, torcedor/1, trabalhaEm/2, referesePessoa/2, naotorcedor/1, naoapelido_Torcida/1, jogador/1, naomascote/1, comandaClube/2, simboliza/2]).
-
-apelido(A) :-  apelido_Pessoa(A). 
-apelido(A) :-  apelido_Time(A). 
-apelido(A) :-  apelido_Torcida(A). 
-
-funcionario(A) :-  presidente(A). 
-funcionario(A) :-  membro_Comissao_Tecnica(A). 
-funcionario(A) :-  tecnico(A). 
-
-jogador(A) :-  jogador_Aposentado(A). 
-jogador(A) :-  titular(A). 
-
-pessoa(A) :-  funcionario(A). 
-pessoa(A) :-  jogador(A). 
-pessoa(A) :-  torcedor(A). 
+:- module(fdt, [trabalhaEm/2, referesePessoa/2, jogaEmTime/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, torcePorTime/2, patrocina/2, simboliza/2, refereseTime/2]).
 
 
-naoapelido_Pessoa(A) :-  \+ apelido_Pessoa(A).
-naoapelido_Torcida(A) :-  \+ apelido_Torcida(A).
-naomembro_Comissao_Tecnica(A) :-  \+ membro_Comissao_Tecnica(A).
-naotecnico(A) :-  \+ tecnico(A).
-naotorcida(A) :-  \+ torcida(A).
-naotime(A) :-  \+ time(A).
-naopessoa(A) :-  \+ pessoa(A).
-naopatrocinador(A) :-  \+ patrocinador(A).
-naomascote(A) :-  \+ mascote(A).
-naoestadio(A) :-  \+ estadio(A).
-naoapelido(A) :-  \+ apelido(A).
-naotorcedor(A) :-  \+ torcedor(A).
-naopresidente(A) :-  \+ presidente(A).
-naojogador_Aposentado(A) :-  \+ jogador_Aposentado(A).
-naoapelido_Time(A) :-  \+ apelido_Time(A).
-naotitular(A) :-  \+ titular(A).
 
-tecnico(X) :- example(tecnico(X)).
-titular(X) :- example(titular(X)).
-estadio(X) :- example(estadio(X)).
-apelido_Pessoa(X) :- example(apelido_Pessoa(X)).
-apelido_Torcida(X) :- example(apelido_Torcida(X)).
-jogador_Aposentado(X) :- example(jogador_Aposentado(X)).
-patrocinador(X) :- example(patrocinador(X)).
-torcedor(X) :- example(torcedor(X)).
 
 
 

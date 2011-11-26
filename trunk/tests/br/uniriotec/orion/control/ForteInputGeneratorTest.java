@@ -147,8 +147,15 @@ public class ForteInputGeneratorTest {
     public void testGenerateTopLevelPredicates() {
     }
 
-//    @Test
+    @Test
     public void testGenerateTheory() {
+    	String corpoRegra = "eee.";
+    	String[] arrayPredicadosCorpoRegra;
+		corpoRegra = corpoRegra.substring(0, corpoRegra.length()-1);
+		arrayPredicadosCorpoRegra = corpoRegra.split(", ");
+		for(String s : arrayPredicadosCorpoRegra){
+			System.out.println(s);
+		}
     }
 
 }

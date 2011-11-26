@@ -27,7 +27,6 @@ import com.hp.hpl.jena.ontology.ObjectProperty;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.Restriction;
 import com.hp.hpl.jena.ontology.SomeValuesFromRestriction;
-import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -113,39 +112,36 @@ public class ForteDataGenerator {
             	}
             }
             
-            /* Verificar todas as outras classes da ontologia e apurar se o conceito
-             * que esta sendo criado eh disjunto a alguma destas outras classes. Sendo,
-             * um axioma "disjointWith" deve ser criado. Esta geracao auxilia a evitar
-             * que regras fiquem sem corpo, pois assume-se que caso nao haja nada
-             * especifico para definir uma classe, ela ao menos eve ser disjunta de
-             * outras classes.
-             */
-            for(OntClass c : conjClasses){
-            	if(c.getDisjointWith() != null){
-                    //iterador em cima de todas as classes disjuntas
-                    Iterator<OntClass> it = c.listDisjointWith();
-                    OntClass aux = null;
-                    while(it.hasNext()){
-                        aux = it.next();
-                        //Se aux == ontClass entao o conceito (ontClass) e a 
-                        //classe iterada (c) sao disjuntas
-                        if(aux.getLocalName().equalsIgnoreCase(ontClass.getLocalName())){
-                        	//Criacao do conceito negativo e verificacao para adicao
-                            Concept conceitoNeg = criarConceitoNegativo(c);
-                            if(isConceptInList(conceitoNeg, conceptsList) == false){
-                            	conceptsList.add(conceitoNeg);	
-                            }
-                            
-                           //adiciona a referencia de disjuncao
-                            ConceptAxiom axioma = new ConceptAxiom();
-                            axioma.setNome("disjointWith");
-                            axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
-
-                            tmpConcept.addConceptAxiom(axioma);
-                        }
-                    }
-                }
-            }
+//            /* Verificar todas as outras classes da ontologia e apurar se o conceito
+//             * que esta sendo criado eh disjunto a alguma destas outras classes. Sendo,
+//             * um axioma "disjointWith" deve ser criado. 
+//             */
+//            for(OntClass c : conjClasses){
+//            	if(c.getDisjointWith() != null){
+//                    //iterador em cima de todas as classes disjuntas
+//                    Iterator<OntClass> it = c.listDisjointWith();
+//                    OntClass aux = null;
+//                    while(it.hasNext()){
+//                        aux = it.next();
+//                        //Se aux == ontClass entao o conceito (ontClass) e a 
+//                        //classe iterada (c) sao disjuntas
+//                        if(aux.getLocalName().equalsIgnoreCase(ontClass.getLocalName())){
+//                        	//Criacao do conceito negativo e verificacao para adicao
+//                            Concept conceitoNeg = criarConceitoNegativo(c);
+//                            if(isConceptInList(conceitoNeg, conceptsList) == false){
+//                            	conceptsList.add(conceitoNeg);	
+//                            }
+//                            
+//                           //adiciona a referencia de disjuncao
+//                            ConceptAxiom axioma = new ConceptAxiom();
+//                            axioma.setNome("disjointWith");
+//                            axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
+//
+//                            tmpConcept.addConceptAxiom(axioma);
+//                        }
+//                    }
+//                }
+//            }
             
             
             
@@ -181,66 +177,66 @@ public class ForteDataGenerator {
                        ConceptRestriction conRest = recuperarDadosRestriction(restriction);
                        tmpConcept.addConceptRestriction(conRest);
                        
-                       //Verificar se existe mais de uma classe no range do OP e criar disjoints
-                	   ObjectProperty op = parser.recuperarObjectProperty(conRest.getNomeProperty());
-                	   if(op.getRange().asClass().isUnionClass()){
-                		   UnionClass uniao = op.getRange().asClass().asUnionClass();
-                           ExtendedIterator<? extends OntClass> iterador = uniao.listOperands();
-                           while(iterador.hasNext()){
-                               OntClass classe = (OntClass) iterador.next();
-                               if(classe.getLocalName().equals(ontClass.getLocalName()) == false){
-                            	   
-                            	   //Criacao e adicao do conceito negativo a lista de conceitos
-                            	   Concept conceitoNeg = criarConceitoNegativo(classe);
-                                   if(isConceptInList(conceitoNeg, conceptsList) == false){
-                                   	conceptsList.add(conceitoNeg);	
-                                   }	
-                                   
-                                   //adiciona a referencia de disjuncao
-                                   ConceptAxiom cAxioma = new ConceptAxiom();
-                                   cAxioma.setNome("disjointWith");
-                                   cAxioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
-                                   
-                                   tmpConcept.addConceptAxiom(cAxioma);
-                               }
-                           }
-                	   }
+//                       //Verificar se existe mais de uma classe no range do OP e criar disjoints
+//                	   ObjectProperty op = parser.recuperarObjectProperty(conRest.getNomeProperty());
+//                	   if(op.getRange().asClass().isUnionClass()){
+//                		   UnionClass uniao = op.getRange().asClass().asUnionClass();
+//                           ExtendedIterator<? extends OntClass> iterador = uniao.listOperands();
+//                           while(iterador.hasNext()){
+//                               OntClass classe = (OntClass) iterador.next();
+//                               if(classe.getLocalName().equals(ontClass.getLocalName()) == false){
+//                            	   
+//                            	   //Criacao e adicao do conceito negativo a lista de conceitos
+//                            	   Concept conceitoNeg = criarConceitoNegativo(classe);
+//                                   if(isConceptInList(conceitoNeg, conceptsList) == false){
+//                                   	conceptsList.add(conceitoNeg);	
+//                                   }	
+//                                   
+//                                   //adiciona a referencia de disjuncao
+//                                   ConceptAxiom cAxioma = new ConceptAxiom();
+//                                   cAxioma.setNome("disjointWith");
+//                                   cAxioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
+//                                   
+//                                   tmpConcept.addConceptAxiom(cAxioma);
+//                               }
+//                           }
+//                	   }
                    }
                }
             }
 
-            /*
-             * Recupera todos os axiomas DisjointWith do conceito e cria um conceito
-             * auxiliar para permitir a negacao.
-             *
-             * Como o forte nao e capaz de revisar regras com negacao e necessario
-             * criar um novo ceonceito que possui a negacao e inclui-lo no FDT.
-             *
-             * Cria-se entao um conceitoNegacao e um axioma subclassOf relacionando
-             * a classe presente ao conceito negado, de forma que a geracao da regra
-             * cria um predicado "regraNegacao(A)".
-             */
-            if(ontClass.getDisjointWith() != null){
-                //iterador em cima de todas as classes disjuntas
-                Iterator<OntClass> it = ontClass.listDisjointWith();
-                OntClass aux = null;
-                while(it.hasNext()){
-                    aux = it.next();
-
-                    //Criacao e adicao do conceito negativo a lista de conceitos
-                    Concept conceitoNeg = criarConceitoNegativo(aux);
-                    if(isConceptInList(conceitoNeg, conceptsList) == false){
-                    	conceptsList.add(conceitoNeg);	
-                    }
-                    
-                    //adiciona a referencia de disjuncao
-                    ConceptAxiom axioma = new ConceptAxiom();
-                    axioma.setNome("disjointWith");
-                    axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
-
-                    tmpConcept.addConceptAxiom(axioma);
-                }
-            }
+//            /*
+//             * Recupera todos os axiomas DisjointWith do conceito e cria um conceito
+//             * auxiliar para permitir a negacao.
+//             *
+//             * Como o forte nao e capaz de revisar regras com negacao e necessario
+//             * criar um novo ceonceito que possui a negacao e inclui-lo no FDT.
+//             *
+//             * Cria-se entao um conceitoNegacao e um axioma subclassOf relacionando
+//             * a classe presente ao conceito negado, de forma que a geracao da regra
+//             * cria um predicado "regraNegacao(A)".
+//             */
+//            if(ontClass.getDisjointWith() != null){
+//                //iterador em cima de todas as classes disjuntas
+//                Iterator<OntClass> it = ontClass.listDisjointWith();
+//                OntClass aux = null;
+//                while(it.hasNext()){
+//                    aux = it.next();
+//
+//                    //Criacao e adicao do conceito negativo a lista de conceitos
+//                    Concept conceitoNeg = criarConceitoNegativo(aux);
+//                    if(isConceptInList(conceitoNeg, conceptsList) == false){
+//                    	conceptsList.add(conceitoNeg);	
+//                    }
+//                    
+//                    //adiciona a referencia de disjuncao
+//                    ConceptAxiom axioma = new ConceptAxiom();
+//                    axioma.setNome("disjointWith");
+//                    axioma.setValor(lowerFirstChar(conceitoNeg.getNome()));
+//
+//                    tmpConcept.addConceptAxiom(axioma);
+//                }
+//            }
 
             /*
              * Se a classe possuir o axioma EquivalentClass indicando sua
@@ -300,7 +296,7 @@ public class ForteDataGenerator {
         List<String> classesEquivalentes = new ArrayList<String>();
         for(Concept c : conceitos){
             String prefixo = c.getNome().substring(0, 3);
-            boolean conceitoRevisavel = false;
+            boolean conceitoRevisavel = true;
             //Se for um conceito de negacao, for abstrato ou nao possuir axiomas, nao eh revisavel
             if(prefixo.equals("nao") || c.isAbstractConcept() || c.getAxiomas() == null){
             	conceitoRevisavel = false;
@@ -659,7 +655,6 @@ public class ForteDataGenerator {
     	return topLevel;
     }
     
-    
     /**
      * <p>Metodo responsavel por gerar os intermediate_predicates no arquivo .DAT.
      * Um predicado eh intermediate quando for um predicado revisavel e aparecer
@@ -785,7 +780,48 @@ public class ForteDataGenerator {
         return conjFacts;
     }
     
- 
+    /**
+     * 
+     * @param conceitosRevisao
+     * @return Collection<? extends Concept>
+     */
+    public List<Concept> retrieveCallerConcepts(List<Concept> conceitosSobRevisao) {
+    	List<Concept> conceitosRevisao = new ArrayList<Concept>();
+    	List<Concept> listaOriginal = new ArrayList<Concept>();
+    	conceitosRevisao.addAll(conceitosSobRevisao);
+    	listaOriginal.addAll(conceitosRevisao);
+    	List<Concept> allConcepts = generateConcepts();
+		
+		/* Quando uma rodada pelo conjunto de todos os conceitos nao retornar nenhum
+		 * conceito "chamador", o loop termina.
+		 */
+    	List<Concept> listaTemp = new ArrayList<Concept>();
+		boolean hasExtractedConcept = true;
+		while(hasExtractedConcept){
+			hasExtractedConcept = false;
+			for(Concept revisavel : conceitosRevisao){
+				for(Concept c: allConcepts){
+					if(c.getNome().equalsIgnoreCase(revisavel.getNome())){
+						continue;
+					}else if(isConceptInList(c, conceitosRevisao) || isConceptInList(c, listaTemp)){
+						continue;
+					}
+					
+					boolean utilizaRevisavel = c.toString().contains(" "+revisavel.getNome()+"(");
+					if(utilizaRevisavel){
+						listaTemp.add(c);
+						hasExtractedConcept = true;
+					}
+				}
+			}
+			conceitosRevisao.addAll(listaTemp);
+			listaTemp.clear();
+		}
+		
+		List<Concept> listaRetorno = conceitosRevisao;
+		listaRetorno.removeAll(listaOriginal);
+		return listaRetorno;
+	}
 
     //////////////////////////////////////////////////////////
     //                 Metodos Auxiliares                   //
@@ -979,5 +1015,7 @@ public class ForteDataGenerator {
 		String complemento = s.substring(1, s.length());
 		return firstChar+complemento;
 	}
+
+	
 
 }

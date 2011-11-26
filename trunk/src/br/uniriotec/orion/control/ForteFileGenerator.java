@@ -44,19 +44,22 @@ public class ForteFileGenerator {
      * @throws IOException 
      */
     public void generateTheoryRules(List<Concept> rulesForRevision) throws IOException{
-    	List<Concept> conceitosRevisaveis = rulesForRevision;
-    	conceitosRevisaveis.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
+    	List<Concept> conceitosRevisao = rulesForRevision;
+    	conceitosRevisao.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
+    	//Recupera todos os conceitos que fazem uso dos conceitos selecionados para revisao
+    	//Se as regras intermediarias gerais tiverem que entrar Ž s— trocar a ordem das linhas.
+    	conceitosRevisao.addAll(dataGenerator.retrieveCallerConcepts(rulesForRevision));
     	
     	//Criar lista com todos os predicados que nao requisitam o prefixo "fdt:"
     	List<String> cabecaPredicadosTHY = new ArrayList<String>();
-    	for(Concept c : conceitosRevisaveis){
+    	for(Concept c : conceitosRevisao){
     		cabecaPredicadosTHY.add(c.getNome());
     	}
     	
     	//Preparar arquivo THY para escrita
     	BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.thy"));
     	
-        for(Concept c : conceitosRevisaveis){
+        for(Concept c : conceitosRevisao){
         	/* verificar se os predicados no corpo das regras fazem parte do "rulesForRevision"
         	 * ou do intermediatePredicates, senao, inserir "fdt:", pois o predicado se encontra
         	 * definido no arquivo FDT.
@@ -64,33 +67,38 @@ public class ForteFileGenerator {
         	int posSinalImplicacao = c.toString().indexOf(":-");
         	String cabecaRegra = c.toString().substring(0, posSinalImplicacao-1);
         	//Separar o corpo da regra
-        	String corpoRegra = c.toString().substring(posSinalImplicacao+3, c.toString().length());
+        	String corpoRegra = c.toString().substring(posSinalImplicacao+2, c.toString().length());
         	//Tirar espacoes anteriores e posteriores
         	corpoRegra = corpoRegra.trim();
         	//retirar o ponto final
-       		corpoRegra = corpoRegra.substring(0, corpoRegra.length()-1);
+        	if(corpoRegra.equals(".") == false){
+        		corpoRegra = corpoRegra.substring(0, corpoRegra.length()-1);
+        	}
         	//Separar em um array cada predicado
         	String[] arrayPredicadosCorpoRegra = corpoRegra.split(", ");
-        	
         	String corpoRegraPrefixado = "";
         	
         	for(String s : arrayPredicadosCorpoRegra){
-        		String temp = s.substring(0, s.indexOf("("));
-        		boolean isCabeca = false;
-        		for(String cabecaPred : cabecaPredicadosTHY){
-        			if(cabecaPred.equals(temp)){
-        				isCabeca = true;
+        		if(s.indexOf("(") != -1){
+        			String temp = s.substring(0, s.indexOf("("));
+            		boolean isCabeca = false;
+            		for(String cabecaPred : cabecaPredicadosTHY){
+            			if(cabecaPred.equals(temp)){
+            				isCabeca = true;
+                		}	
+            		}
+            		if(isCabeca){
+            			corpoRegraPrefixado += s+", ";
+            		}else{
+            			corpoRegraPrefixado += "fdt:"+s+", ";
             		}	
         		}
-        		if(isCabeca){
-        			corpoRegraPrefixado += s+", ";
-        		}else{
-        			corpoRegraPrefixado += "fdt:"+s+", ";
-        		}	
         	}
         	
         	//trocar ultimo ", " por "."
-        	corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2) + ".";
+        	if(corpoRegra.equals(".") == false){
+        		corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2) + ".";
+        	}
         	
         	//Escrever a regra no arquivo
             writter.append(cabecaRegra+" :- "+corpoRegraPrefixado+"\n");
@@ -113,15 +121,39 @@ public class ForteFileGenerator {
         List<Concept> conceitosRevisaveis = dataGenerator.retrieveRevisableConcepts();
         List<Relationship> relacionamentos = dataGenerator.generateRelationships();
         
-        //Lista de conceitos revisaveis que o usuario optou por nao revisar
-        //Consiste no conjunto de todos os conceitos revisaveis menos os selecionados
-        //para revisao e os intermediarios dos selecionados para revisao.
-        List<Concept> conceitosRevisaveisExcluidos = conceitosRevisaveis;
-        //exclui os selecionados
-        conceitosRevisaveisExcluidos.removeAll(rulesForRevision);
-        //exclui os intermediarios dos conceitos selecionados
-        conceitosRevisaveisExcluidos.removeAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
         
+        /* A lista de conceitos revisaveis excluidos consiste em todos os conceitos que nao
+         * foram selecionados pelo usuario para revisao, alem dos intermediarios dos conceitos
+         * selecionados por ele e todos os conceitos "chamadores", ou seja, que fazem uso dos
+         * conceitos selecionados e dos intermediarios em seu corpo.
+         */
+        //Conceitos Intermediarios
+        List<Concept> conceitosIntermediarios = dataGenerator.generateIntermediatePredicates(rulesForRevision);
+        //Conceitos "chamadores"
+        List<Concept> listaTemp = new ArrayList<Concept>();
+        listaTemp.addAll(rulesForRevision);
+        listaTemp.addAll(conceitosIntermediarios);
+        List<Concept> conceitosCallers = dataGenerator.retrieveCallerConcepts(listaTemp);
+        
+        //Criacao da listsa com os conceitos revisaveis excluidos
+        List<Concept> conceitosRevisaveisExcluidos = new ArrayList<Concept>();
+        conceitosRevisaveisExcluidos.addAll(conceitosRevisaveis);
+        //Remocao dos selecionados para revisao, Intermediarios e "chamadores"
+        conceitosRevisaveisExcluidos.removeAll(rulesForRevision);
+        conceitosRevisaveisExcluidos.removeAll(conceitosIntermediarios);
+        conceitosRevisaveisExcluidos.removeAll(conceitosCallers);
+        
+        
+        /* 
+         * Conceitos abstratos soh devem ser escritos no FDT se ja nao estiverem 
+         * inseridos no THY.
+         */
+        conceitosAbstratos.removeAll(conceitosCallers);
+        
+        
+        /*
+         * Preparacao para escrita do modulo e dos componentes do arquivo
+         */
         String moduloFDT = ":- module(fdt, [";
         Set<String> itensModule = new HashSet<String>();
         String conceitosFDT = "\n";
@@ -161,6 +193,10 @@ public class ForteFileGenerator {
         
         moduloFDT = moduloFDT.substring(0, moduloFDT.length()-2) + "]).\n";
         
+        
+        /*
+         * Escrita do arquivo
+         */
         BufferedWriter writter = new BufferedWriter(new FileWriter("src/input/forte/times.fdt"));
         writter.append(moduloFDT);
         writter.append(conceitosFDT);
