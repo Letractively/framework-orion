@@ -33,7 +33,8 @@ public class Concept extends ForteResource {
     public String toString(){
         List<String> variaveis = new ArrayList<String>(Arrays.asList(getListaVariaveis()));
         String varPrincipal = variaveis.remove(0);
-        String texto = nome + "(" + varPrincipal + ") :-  ";
+        String cabecaRegra = nome + "(" + varPrincipal + ") :-  "; 
+        String corpoRegra = "";
         String regras = "";
         
         /*
@@ -45,7 +46,7 @@ public class Concept extends ForteResource {
                 for(ConceptAxiom axioma : axiomas){
                     //Se for um axioma superClassOf
                     if(axioma.getNome().equals("superClassOf")){
-                    	regras += texto + axioma.getValor() + "(" + varPrincipal + "). \n";
+                    	regras += cabecaRegra + axioma.getValor() + "(" + varPrincipal + "). \n";
                     }
                 }
             }
@@ -64,14 +65,14 @@ public class Concept extends ForteResource {
             	//Este codigo eh responsavel por escrever conceitos negativos no FDT
                 if(axioma.getNome().equals("subClassOf")){
                     if(nome.subSequence(0, 3).equals("nao")){
-                        texto += axioma.getValor() + "("+ varPrincipal +"), ";
+                        corpoRegra += axioma.getValor() + "("+ varPrincipal +"), ";
                     }
                 }
                 //Se for um axioma disjointWith
                 if(axioma.getNome().equals("disjointWith")){
                 	String axiomaDisjoint = axioma.getValor() + "(" + varPrincipal + "), ";
-                	if(texto.contains(axiomaDisjoint) == false){
-                		texto += axiomaDisjoint;
+                	if(corpoRegra.contains(axiomaDisjoint) == false){
+                		corpoRegra += axiomaDisjoint;
                 	}
                 }
 
@@ -86,13 +87,13 @@ public class Concept extends ForteResource {
         if(restrictions != null){
             for(ConceptRestriction rest : restrictions){
                 if(rest.getTipoRestriction().equals("hasValue")){
-                    texto += rest.getNomeProperty() +
+                    corpoRegra += rest.getNomeProperty() +
                             "(" + varPrincipal + "," + rest.getValorRestriction()+"), ";
                 }
 
                 if(rest.getTipoRestriction().equals("someValuesFrom")){
                     String varAux = variaveis.remove(0);
-                    texto += rest.getNomeProperty() +
+                    corpoRegra += rest.getNomeProperty() +
                             "(" + varPrincipal + "," + varAux + "), "+
                             rest.getValorRestriction() + "(" + varAux + "), ";
                 }
@@ -112,11 +113,13 @@ public class Concept extends ForteResource {
         }
 
         //Trocar a ultima virgula por um ponto
-        int tamanhoTexto = texto.length();
-        texto = texto.substring(0, tamanhoTexto-2);
-        texto += ".";
+        int tamanhoTexto = corpoRegra.length();
+        if(tamanhoTexto==0){
+        	return cabecaRegra + "true.";
+        }else{
+	        return cabecaRegra + corpoRegra.substring(0, tamanhoTexto-2)+ ".";
+        }
         
-        return texto;
     }
     
     /**

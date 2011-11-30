@@ -118,9 +118,7 @@ public class ForteInputGeneratorTest {
 
         while(it.hasNext()){
             aux = it.next();
-            for(String s : aux.getRelacionamentos()){
-                System.out.println(s);
-            }
+            System.out.println(aux.getRelacionamentos());
         }
     }
 

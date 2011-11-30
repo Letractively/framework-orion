@@ -154,7 +154,6 @@ public class OntologyParser extends Object {
         return instancias;
     }
 
-    
     /**
      * <p>Retorna um Set de objetos Individual, contendo todas as instancias
      * da classe (objeto OntClass) especificada no parametro.</p>
