@@ -1,8 +1,6 @@
 
 package br.uniriotec.orion.model.forte.resources;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /** Classe representante de um relacionamento em clausula de Horn.
@@ -11,7 +9,7 @@ import java.util.List;
  */
 public class Relationship extends ForteResource {
     private String nomeRelacionamento;
-    private List<String> primeiroTermo;
+    private String primeiroTermo;
     private String segundoTermo;
 
     @Override
@@ -27,12 +25,8 @@ public class Relationship extends ForteResource {
      * 
      * @return List<String>
      */
-    public List<String> getRelacionamentos(){
-        List<String> result = new ArrayList<String>();
-        for(String s : primeiroTermo){
-            result.add(nomeRelacionamento + "(a,b) :- " + s + "(a), " + segundoTermo + "(b)");
-        }
-        return result;
+    public String getRelacionamentos(){
+        return nomeRelacionamento + "(A,B) :- " + primeiroTermo + "(A), " + segundoTermo + "(B)";
     }
 
     public String getNome() {
@@ -43,11 +37,11 @@ public class Relationship extends ForteResource {
         this.nomeRelacionamento = nome;
     }
 
-    public List<String> getPrimeiroTermo() {
+    public String getPrimeiroTermo() {
         return primeiroTermo;
     }
 
-    public void setPrimeiroTermo(List<String> primeiroTermo) {
+    public void setPrimeiroTermo(String primeiroTermo) {
         this.primeiroTermo = primeiroTermo;
     }
 

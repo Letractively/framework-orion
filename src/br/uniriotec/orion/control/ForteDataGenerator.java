@@ -168,13 +168,13 @@ public class ForteDataGenerator {
                        tmpConcept.addConceptAxiom(axioma);
                        
                        //Se a super classe for abstrata recupera todos os relacionamentos
-                       List<ConceptRestriction> relacionamentosSup = recuperarRelacionamentosSup(aux);
+                       List<ConceptRestriction> relacionamentosSup = recuperarRelacionamentosSup(aux, ontClass.getLocalName());
                        for(ConceptRestriction conRest : relacionamentosSup){
                     	   tmpConcept.addConceptRestriction(conRest);
                        }
                    }else{ //eh um restriction
                        Restriction restriction = aux.asRestriction();
-                       ConceptRestriction conRest = recuperarDadosRestriction(restriction);
+                       ConceptRestriction conRest = recuperarDadosRestriction(restriction, tmpConcept.getNome());
                        tmpConcept.addConceptRestriction(conRest);
                        
 //                       //Verificar se existe mais de uma classe no range do OP e criar disjoints
@@ -397,7 +397,7 @@ public class ForteDataGenerator {
     
     /**
      * recupera todos os objetos ObjectProperty da ontologia e cria objetos
-     * Relationship com base neles. É considerado o caso de Range se referir
+     * Relationship com base neles. Eh considerado o caso de Range se referir
      * a mais de uma Classe (fazendo uso de um UnionOf)
      *
      * @return List<Relationship>
@@ -406,43 +406,53 @@ public class ForteDataGenerator {
 	public List<Relationship> generateRelationships(){
         List<Relationship> relationshipList = new ArrayList<Relationship>();
         Set<ObjectProperty> conjObjProp = parser.listarObjectProperties();
-
-        //Para cada ObjectProperty da Ontologia criar um objeto Relationship
+        
+        //Para cada ObjectProperty da Ontologia, sera criado um Relationship para cada Range
         for(ObjectProperty objProp : conjObjProp){
-            Relationship rel = new Relationship();
-            rel.setNome(lowerFirstChar(objProp.getLocalName()));
-
             //Criar um Iterador em cima dos valores em RANGE
             //Caso haja mais de um, todos serao adicionados ao Relationship
             ExtendedIterator itRanges = objProp.listRange();
-            List<String> termosRange = new ArrayList<String>();
             while(itRanges.hasNext()){
-                OntClass rangeClasses = (OntClass)itRanges.next();
+            	OntClass rangeClasses = (OntClass)itRanges.next();
                 //Se houver mais de um Range
                 if(rangeClasses.isAnon()){
                     Iterator itRangeClasses = rangeClasses.asUnionClass().getOperands().iterator();
                     //Adiciona cada Range ao Relationship
                     while(itRangeClasses.hasNext()){
-                        Resource range =  (Resource)itRangeClasses.next();
-                        termosRange.add(lowerFirstChar(range.getLocalName()));
+                    	Resource range =  (Resource)itRangeClasses.next();
+                    	
+                    	//Se a classe no range for abstrata recupera of filhos concretos indiretos
+                    	if(checkAbstractClass(retrieveOntClass(range.getLocalName()))){
+                    		//recupera filhos concretos indiretos
+                    		List<OntClass> filhosConcretos = recuperarFilhosConcretos(retrieveOntClass(range.getLocalName()));
+                    		for(OntClass c : filhosConcretos){
+                    			relationshipList.add(criaRelacionamentoAuxiliar(c.getLocalName(), objProp));
+                    		}
+            			}else{
+            				relationshipList.add(criaRelacionamentoAuxiliar(range.getLocalName(), objProp));
+            			}
                     }
                 //Havendo somente um Range
                 }else{
-                    termosRange.add(lowerFirstChar(rangeClasses.getLocalName()));
+                	if(checkAbstractClass(retrieveOntClass(rangeClasses.getLocalName()))){
+                		//recupera filhos concretos indiretos
+                		List<OntClass> filhosConcretos = recuperarFilhosConcretos(retrieveOntClass(rangeClasses.getLocalName()));
+                		for(OntClass c : filhosConcretos){
+                			relationshipList.add(criaRelacionamentoAuxiliar(c.getLocalName(), objProp));
+                		}
+                	}else{
+                		relationshipList.add(criaRelacionamentoAuxiliar(rangeClasses.getLocalName(), objProp));
+                	}
                 }
-                rel.setPrimeiroTermo(termosRange);
             }
-
-            //Recuperar o Domain
-            rel.setSegundoTermo(lowerFirstChar(objProp.getDomain().getLocalName()));
-
-            //Adicionar Objeto a lista de retorno
-            relationshipList.add(rel);
         }
         return relationshipList;
     }
 
-    /**
+
+
+
+	/**
      * <p>Metodo para geracao dos exemplos positivos da teoria a partir das
      * instancias fornecidas pela ontologia.
      * <br />
@@ -741,7 +751,11 @@ public class ForteDataGenerator {
         		Statement p = it.next();
         		if((p.getObject().isResource()) && (p.getPredicate().getLocalName().equalsIgnoreCase("type") == false)){
         			RelationshipExample ex = new RelationshipExample();
-		        		ex.setPredicado(lowerFirstChar(p.getPredicate().getLocalName()));
+		        		ex.setPredicado(lowerFirstChar(
+		        				i.getOntClass().getLocalName()
+		        				+"_"
+		        				+p.getPredicate().getLocalName())
+		        			);
 		        		ex.setPrimeiroTermo(lowerFirstChar(p.getSubject().getLocalName()));
 		        		ex.setSegundoTermo(lowerFirstChar(p.getObject().asResource().getLocalName()));
 		        	conjFacts.add(ex);
@@ -835,11 +849,11 @@ public class ForteDataGenerator {
      * @param restriction
      * @return mapRestriction
      */
-    private ConceptRestriction recuperarDadosRestriction(Restriction restriction) {
-        
+    private ConceptRestriction recuperarDadosRestriction(Restriction restriction, String conceptName) {
+       
        ConceptRestriction restricao = new ConceptRestriction();
-       restricao.setNomeProperty(lowerFirstChar(restriction.getOnProperty().getLocalName()));
-        
+       restricao.setNomeProperty(lowerFirstChar(conceptName)+"_"+restriction.getOnProperty().getLocalName());
+       
        if(restriction.isCardinalityRestriction()){
            CardinalityRestriction rest = restriction.asCardinalityRestriction();
            restricao.setTipoRestriction("cardinality");
@@ -965,11 +979,10 @@ public class ForteDataGenerator {
      * @param aux
      * @return
      */
-    private List<ConceptRestriction> recuperarRelacionamentosSup(OntClass ontClass) {
-		
+    private List<ConceptRestriction> recuperarRelacionamentosSup(OntClass ontClass, String nomeConceitoBase) {
     	List<ConceptRestriction> relacionamentos = new ArrayList<ConceptRestriction>();
     	
-		if(parser.listarInstancias(ontClass).size() == 0){
+		if(checkAbstractClass(ontClass)){
     		if(ontClass.getSuperClass() != null){
                 Iterator<OntClass> it = ontClass.listSuperClasses(true);
                 OntClass aux = null;
@@ -977,9 +990,9 @@ public class ForteDataGenerator {
                     aux = it.next();
                     if(aux.getLocalName() == null){
                     	Restriction restriction = aux.asRestriction();
-                        relacionamentos.add(recuperarDadosRestriction(restriction));
+                        relacionamentos.add(recuperarDadosRestriction(restriction, nomeConceitoBase));
                     }else{
-                    	relacionamentos.addAll(recuperarRelacionamentosSup(aux));
+                    	relacionamentos.addAll(recuperarRelacionamentosSup(aux, nomeConceitoBase));
                     }
                 }
              }
@@ -994,7 +1007,8 @@ public class ForteDataGenerator {
      * @param ontClass
      * @return
      */
-    private Concept criarConceitoNegativo(OntClass ontClass) {
+    @SuppressWarnings("unused")
+	private Concept criarConceitoNegativo(OntClass ontClass) {
 		Concept conceitoNeg = new Concept();
             ConceptAxiom axiomaNeg = new ConceptAxiom();
             axiomaNeg.setNome("subClassOf");
@@ -1002,6 +1016,70 @@ public class ForteDataGenerator {
         conceitoNeg.setNome("nao"+lowerFirstChar(ontClass.getLocalName()));
         conceitoNeg.addConceptAxiom(axiomaNeg);
         return conceitoNeg;
+	}
+    
+    private List<OntClass> recuperarFilhosConcretos(OntClass classeBase) {
+		List<OntClass> filhosConcretos = new ArrayList<OntClass>();
+		Set<OntClass> conjClasses = parser.listarClasses();
+		
+		//passa por cada classe da ontologia
+		for(OntClass ontClass : conjClasses){
+			//procura o axioma subClassOf da classe
+			if(ontClass.getSuperClass() != null){
+                Iterator<OntClass> it = ontClass.listSuperClasses(true);
+                OntClass aux = null;
+                //Para cada superclasse
+                while(it.hasNext()){
+                    aux = it.next();
+                    //Se o nome for NULL nao eh referencia a superclasse
+                    if(aux.getLocalName() == null){
+                    	continue;
+                    }
+                    //Verifica se eh filha da classe passada como parametro
+                    if(aux.getLocalName().equalsIgnoreCase(classeBase.getLocalName())){
+                    	//sendo filha verifica se tambem eh abstrata
+                    	if(checkAbstractClass(ontClass)){
+                    		//sendo abstrata procura os filhos concretos novamente
+                    		filhosConcretos.addAll(recuperarFilhosConcretos(ontClass));
+                    	}else{
+                    		//sendo concreta adiciona a lista de filhos concretos
+		                	filhosConcretos.add(ontClass);
+                    	}
+                    }
+                }
+             }
+		}
+		
+		return filhosConcretos;
+	}
+    
+    private OntClass retrieveOntClass(String nomeOntClass){
+    	Set<OntClass> conjClasses = parser.listarClasses();
+    	for(OntClass c : conjClasses){
+    		if(c.getLocalName().equalsIgnoreCase(nomeOntClass)){
+    			return c;
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    private boolean checkAbstractClass(OntClass ontClass) {
+    	if(parser.listarInstancias(ontClass).size() == 0){
+    		return true;
+    	}else{
+    		return false;
+    	}
+	}
+    
+    private Relationship criaRelacionamentoAuxiliar(String nomeClasse, ObjectProperty obj) {
+		Relationship rel = new Relationship();
+		
+		rel.setNome(lowerFirstChar(nomeClasse)+"_"+obj.getLocalName());
+        rel.setPrimeiroTermo(lowerFirstChar(nomeClasse));
+        rel.setSegundoTermo(lowerFirstChar(obj.getDomain().getLocalName()));
+        
+        return rel;
 	}
     
     /**

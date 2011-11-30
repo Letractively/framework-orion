@@ -71,7 +71,7 @@ public class ForteFileGenerator {
         	//Tirar espacoes anteriores e posteriores
         	corpoRegra = corpoRegra.trim();
         	//retirar o ponto final
-        	if(corpoRegra.equals(".") == false){
+        	if(corpoRegra.equals("true.") == false){
         		corpoRegra = corpoRegra.substring(0, corpoRegra.length()-1);
         	}
         	//Separar em um array cada predicado
@@ -96,12 +96,12 @@ public class ForteFileGenerator {
         	}
         	
         	//trocar ultimo ", " por "."
-        	if(corpoRegra.equals(".") == false){
+        	if(corpoRegra.equals("true.") == false){
         		corpoRegraPrefixado = corpoRegraPrefixado.substring(0, corpoRegraPrefixado.length()-2) + ".";
+        		writter.append(cabecaRegra+" :- "+corpoRegraPrefixado+"\n");
+        	}else{
+        		writter.append(cabecaRegra+" :- "+corpoRegra+"\n");
         	}
-        	
-        	//Escrever a regra no arquivo
-            writter.append(cabecaRegra+" :- "+corpoRegraPrefixado+"\n");
         }
         writter.flush();
     }
@@ -218,16 +218,17 @@ public class ForteFileGenerator {
      * @throws IOException 
      */
     public void generateDataFile(List<Concept> rulesForRevision) throws IOException{
-        List<Concept> topLevelConcepts = rulesForRevision;
-    	List<Concept> intermediateConcepts = dataGenerator.generateIntermediatePredicates(rulesForRevision);
-    	List<Relationship> relacionamentos = dataGenerator.generateRelationships();
+        List<Concept> topLevelConcepts = new ArrayList<Concept>();
+        List<Concept> intermediateConcepts = new ArrayList<Concept>();
+        List<Relationship> relacionamentos = new ArrayList<Relationship>();
+        
+        topLevelConcepts.addAll(rulesForRevision);
+    	intermediateConcepts.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
+    	relacionamentos.addAll(dataGenerator.generateRelationships());
     	
     	List<String> topLevelPredicates = new ArrayList<String>();
     	List<String> intermediatePredicates = new ArrayList<String>();
     	Set<String> variaveis = new HashSet<String>();
-    	//Unir as regras selecionadas para revisao (top_level + intermediates)
-    	List<Concept> regrasParaRevisao = rulesForRevision;
-    	regrasParaRevisao.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
     	
     	
     	//Recuperar predicados de top_level e intermediate.
@@ -279,16 +280,17 @@ public class ForteFileGenerator {
     	
     	
     	//Preparar Shielded
-    	String shielded = "shielded([";
-    	List<Concept> conjuntoRegrasNaoRevisadas = dataGenerator.retrieveRevisableConcepts();
-    	conjuntoRegrasNaoRevisadas.removeAll(rulesForRevision);
-    	if(conjuntoRegrasNaoRevisadas.size() != 0){
-    		for(Concept c : conjuntoRegrasNaoRevisadas){
-        		shielded += c.getNome()+"(_), ";
-        	}
-        	shielded = shielded.substring(0, shielded.length()-2);
-    	}
-    	shielded += "]).";
+    	String shielded = "shielded([]).";
+//    	String shielded = "shielded([";
+//    	List<Concept> conjuntoRegrasNaoRevisadas = dataGenerator.retrieveRevisableConcepts();
+//    	conjuntoRegrasNaoRevisadas.removeAll(rulesForRevision);
+//    	if(conjuntoRegrasNaoRevisadas.size() != 0){
+//    		for(Concept c : conjuntoRegrasNaoRevisadas){
+//        		shielded += c.getNome()+"(_), ";
+//        	}
+//        	shielded = shielded.substring(0, shielded.length()-2);
+//    	}
+//    	shielded += "]).";
     	
     	
     	
@@ -296,7 +298,7 @@ public class ForteFileGenerator {
     	String objectRel = "object_relations([";
     	if(relacionamentos.size() != 0){
     		for(Relationship r : relacionamentos){
-        		String v1 = "var" + dataGenerator.lowerFirstChar(r.getPrimeiroTermo().get(0));
+        		String v1 = "var" + dataGenerator.lowerFirstChar(r.getPrimeiroTermo());
         		String v2 = "var" + dataGenerator.lowerFirstChar(r.getSegundoTermo());
         		objectRel += r.getNome()+ "(" + v1 + "," + v2 + "), ";
         		variaveis.add(v1);
@@ -321,7 +323,7 @@ public class ForteFileGenerator {
     	
     	
     	//Preparar Exemplos Positivos
-    	List<IExample> exemplosPositivosList = dataGenerator.generatePositiveExamples(regrasParaRevisao);
+    	List<IExample> exemplosPositivosList = dataGenerator.generatePositiveExamples(rulesForRevision);
     	String exemplosPositivos = "[";
     	if(exemplosPositivosList.size()!=0){
     		for(IExample ex : exemplosPositivosList){
@@ -334,7 +336,7 @@ public class ForteFileGenerator {
     	
     	
     	//Preparar Exemplos negativos
-    	List<IExample> exemplosNegativosList = dataGenerator.generateNegativeExamples(regrasParaRevisao);
+    	List<IExample> exemplosNegativosList = dataGenerator.generateNegativeExamples(rulesForRevision);
     	String exemplosNegativos = "[";
     	if(exemplosNegativosList.size()!=0){
     		for(IExample ex : exemplosNegativosList){
@@ -365,7 +367,7 @@ public class ForteFileGenerator {
     	
     	
     	//Preparar Fatos
-    	List<IExample> factsList = dataGenerator.generateFacts(regrasParaRevisao);
+    	List<IExample> factsList = dataGenerator.generateFacts(rulesForRevision);
     	String facts = "[";
     	if(factsList.size()!=0){
     		for(IExample ex : factsList){

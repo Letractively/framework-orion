@@ -1,17 +1,20 @@
-:- module(fdt, [trabalhaEm/2, referesePessoa/2, jogaEmTime/2, refereseTorcida/2, comandaClube/2, pertenceTime/2, torcePorTime/2, patrocina/2, simboliza/2, refereseTime/2]).
+:- module(fdt, [apelido_Torcida_refereseTorcida/2, apelido_Time_refereseTime/2, patrocinador_patrocinaTime/2, torcida_TorcePorTime/2, jogador_Ativo_jogaEmTime/2, apelido_Pessoa_referesePessoa/2, mascote_simboliza/2, torcedor_TorcePorTime/2, membro_Comissao_Tecnica_trabalhaEm/2, jogador_Aposentado_jogaEmTime/2, estadio_pertenceTime/2, presidente_comandaClube/2, tecnico_trabalhaEm/2]).
 
 
 
 
 
 
-referesePessoa(A,B) :- example(referesePessoa(A,B)).
-refereseTorcida(A,B) :- example(refereseTorcida(A,B)).
-torcePorTime(A,B) :- example(torcePorTime(A,B)).
-comandaClube(A,B) :- example(comandaClube(A,B)).
-pertenceTime(A,B) :- example(pertenceTime(A,B)).
-refereseTime(A,B) :- example(refereseTime(A,B)).
-trabalhaEm(A,B) :- example(trabalhaEm(A,B)).
-simboliza(A,B) :- example(simboliza(A,B)).
-jogaEmTime(A,B) :- example(jogaEmTime(A,B)).
-patrocina(A,B) :- example(patrocina(A,B)).
+apelido_Pessoa_referesePessoa(A,B) :- example(apelido_Pessoa_referesePessoa(A,B)).
+apelido_Torcida_refereseTorcida(A,B) :- example(apelido_Torcida_refereseTorcida(A,B)).
+torcedor_TorcePorTime(A,B) :- example(torcedor_TorcePorTime(A,B)).
+torcida_TorcePorTime(A,B) :- example(torcida_TorcePorTime(A,B)).
+presidente_comandaClube(A,B) :- example(presidente_comandaClube(A,B)).
+estadio_pertenceTime(A,B) :- example(estadio_pertenceTime(A,B)).
+apelido_Time_refereseTime(A,B) :- example(apelido_Time_refereseTime(A,B)).
+membro_Comissao_Tecnica_trabalhaEm(A,B) :- example(membro_Comissao_Tecnica_trabalhaEm(A,B)).
+tecnico_trabalhaEm(A,B) :- example(tecnico_trabalhaEm(A,B)).
+mascote_simboliza(A,B) :- example(mascote_simboliza(A,B)).
+jogador_Ativo_jogaEmTime(A,B) :- example(jogador_Ativo_jogaEmTime(A,B)).
+jogador_Aposentado_jogaEmTime(A,B) :- example(jogador_Aposentado_jogaEmTime(A,B)).
+patrocinador_patrocinaTime(A,B) :- example(patrocinador_patrocinaTime(A,B)).

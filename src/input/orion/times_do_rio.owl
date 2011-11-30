@@ -50,9 +50,9 @@
     
 
 
-    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#patrocina -->
+    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#patrocinaTime -->
 
-    <owl:ObjectProperty rdf:about="#patrocina">
+    <owl:ObjectProperty rdf:about="#patrocinaTime">
         <rdfs:range rdf:resource="#Patrocinador"/>
         <rdfs:domain rdf:resource="#Time"/>
     </owl:ObjectProperty>
@@ -336,7 +336,7 @@
 
     <owl:Class rdf:about="#Jogador_Aposentado">
         <rdfs:subClassOf rdf:resource="#Jogador"/>
-        <owl:disjointWith rdf:resource="#Titular"/>
+        <owl:disjointWith rdf:resource="#Jogador_Ativo"/>
     </owl:Class>
     
 
@@ -403,7 +403,7 @@
         <rdfs:subClassOf rdf:resource="&owl;Thing"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="#patrocina"/>
+                <owl:onProperty rdf:resource="#patrocinaTime"/>
                 <owl:someValuesFrom rdf:resource="#Time"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -462,9 +462,9 @@
     
 
 
-    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#Titular -->
+    <!-- http://framework-orion.googlecode.com/files/times_do_rio.owl#Jogador_Ativo -->
 
-    <owl:Class rdf:about="#Titular">
+    <owl:Class rdf:about="#Jogador_Ativo">
         <rdfs:subClassOf rdf:resource="#Jogador"/>
     </owl:Class>
     
@@ -752,7 +752,7 @@
 	<owl:Thing rdf:about="#Unimed">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Unimed</nome>
-		<patrocina rdf:resource="#Fluminense"/>
+		<patrocinaTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
 	
@@ -760,7 +760,7 @@
 	<owl:Thing rdf:about="#Adidas">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Adidas</nome>
-		<patrocina rdf:resource="#Fluminense"/>
+		<patrocinaTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 
 
@@ -768,7 +768,7 @@
 	<owl:Thing rdf:about="#Guaraviton">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Guaraviton</nome>
-		<patrocina rdf:resource="#Botafogo"/>
+		<patrocinaTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 
 
@@ -776,7 +776,7 @@
 	<owl:Thing rdf:about="#Havoline">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Havoline</nome>
-		<patrocina rdf:resource="#Botafogo"/>
+		<patrocinaTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 
 
@@ -785,8 +785,8 @@
 	<owl:Thing rdf:about="#BMG">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">BMG</nome>
-		<patrocina rdf:resource="#Flamengo"/>
-		<patrocina rdf:resource="#Vasco"/>
+		<patrocinaTime rdf:resource="#Flamengo"/>
+		<patrocinaTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	
@@ -794,7 +794,7 @@
 	<owl:Thing rdf:about="#Olympikus">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Olympikus</nome>
-		<patrocina rdf:resource="#Flamengo"/>
+		<patrocinaTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
 	
@@ -802,7 +802,7 @@
 	<owl:Thing rdf:about="#Penalty">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Penalty</nome>
-		<patrocina rdf:resource="#Vasco"/>
+		<patrocinaTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	
@@ -810,7 +810,7 @@
 	<owl:Thing rdf:about="#Eletrobras">
 		<rdf:type rdf:resource="#Patrocinador"/>
         <nome rdf:datatype="&xsd;string">Eletrobras</nome>
-		<patrocina rdf:resource="#Vasco"/>
+		<patrocinaTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
 	
@@ -1052,59 +1052,59 @@
     </owl:Thing>
 	
 	
-	<!-- ////////////////////////////// TITULAR //////////////////////////////// -->
+	<!-- ////////////////////////////// Jogador_Ativo //////////////////////////////// -->
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Fernando_Prass">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Fernando</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Prass</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Dede">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Anderson</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Silva</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Felipe_Bastos">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Felipe</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Bastos</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Felipe">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Felipe</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Jorge Loureiro</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Eder_Luis">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Eder</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Luis</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Diego_Souza">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Diego</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Souza</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Vasco -->
+	<!-- Jogador_Ativo: Vasco -->
 	<owl:Thing rdf:about="#Alecsandro">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Alecsandro</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Felisbino</sobrenome>
 		<jogaEmTime rdf:resource="#Vasco"/>
@@ -1116,81 +1116,81 @@
 	
 	
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Felipe_dos_Santos">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Felipe</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">dos Santos</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Leo_Moura">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Leo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Moura</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Galhardo">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Rafael</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Galhardo</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Egidio">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Egidio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Júnior</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Maldonado">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Claudio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Maldonado</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Thiago_Neves">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Thiago</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Neves</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Bottinelli">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Dario</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Bottinelli</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Ronaldinho">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Ronaldo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Gaúcho</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Diego_Mauricio">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Diego</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Maurício</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Flamengo -->
+	<!-- Jogador_Ativo: Flamengo -->
 	<owl:Thing rdf:about="#Negueba">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Guilherme</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Negueba</sobrenome>
 		<jogaEmTime rdf:resource="#Flamengo"/>
@@ -1203,81 +1203,81 @@
 	
 	
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Ricardo_Berna">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Ricardo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Berna</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Diego_Cavaliere">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Diego</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Cavaliere</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Gum">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Wellington</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Rodrigues</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Leandro_Euzebio">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Leandro</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Euzebio</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Edinho">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Edimo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Ferreira Campos</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Diguinho">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Rodrigo</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Oliveira de Bittencourt</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Conca">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Dario</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Conca</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Deco">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Andre Luis</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Souza</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Fred">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Frederico</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Chaves Guedes</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Fluminense -->
+	<!-- Jogador_Ativo: Fluminense -->
 	<owl:Thing rdf:about="#Rafael_Moura">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Rafael</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Moura</sobrenome>
 		<jogaEmTime rdf:resource="#Fluminense"/>
@@ -1290,65 +1290,65 @@
 	
 	
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Jefferson">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Jefferson</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">de Oliveira Galvão</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Antonio_Carlos">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Antonio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Carlos</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Arevalo">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Egidio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Arevalo Rios</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Somalia">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Paulo Rogerio</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Reis da Silva</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Maicossuel">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Maicossuel</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Reginaldo de Matos</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Thiago_Galhardo">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Thiago</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Galhardo</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Loco_Abreu">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Sebastián</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Abreu</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
     </owl:Thing>
 	
-	<!-- TITULAR: Botafogo -->
+	<!-- Jogador_Ativo: Botafogo -->
 	<owl:Thing rdf:about="#Herrera">
-		<rdf:type rdf:resource="#Titular"/>
+		<rdf:type rdf:resource="#Jogador_Ativo"/>
 		<primeiroNome rdf:datatype="&xsd;string">Germán</primeiroNome>
         <sobrenome rdf:datatype="&xsd;string">Herrera</sobrenome>
 		<jogaEmTime rdf:resource="#Botafogo"/>
