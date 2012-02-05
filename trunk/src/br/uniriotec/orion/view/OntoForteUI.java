@@ -21,8 +21,8 @@ import br.uniriotec.orion.model.forte.resources.Concept;
 public class OntoForteUI {
     
      public OntoForteUI(){
-//    	String urlOntologia = "src/input/orion/times_do_rio_limitado.owl";
-    	String urlOntologia = "src/input/orion/times_do_rio.owl";
+    	String urlOntologia = "src/input/orion/times_do_rio_defasado.owl";
+//    	String urlOntologia = "src/input/orion/times_do_rio.owl";
 //    	String urlOntologia = "src/input/orion/instOntology_RDF.owl";
         ForteDataGenerator dataGenerator = new ForteDataGenerator(urlOntologia);
         ForteFileGenerator fileGenerator = new ForteFileGenerator(urlOntologia);
@@ -41,7 +41,7 @@ public class OntoForteUI {
         for(int i=0; i<3; i++){
             conceitosParaRevisao.add(conceitosRevisaveis.get(i));
         }
-//        conceitosParaRevisao.add(conceitosRevisaveis.get(0));
+        conceitosParaRevisao.add(conceitosRevisaveis.get(6));
 //        conceitosParaRevisao.add(conceitosRevisaveis.get(2));
         System.out.println("\n=== Regras escolhidas para revisao ===");
         for(Concept c : conceitosParaRevisao){
