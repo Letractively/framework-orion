@@ -44,7 +44,8 @@ public class ForteFileGenerator {
      * @throws IOException 
      */
     public void generateTheoryRules(List<Concept> rulesForRevision) throws IOException{
-    	List<Concept> conceitosRevisao = rulesForRevision;
+    	List<Concept> conceitosRevisao = new ArrayList<Concept>();
+    	conceitosRevisao.addAll(rulesForRevision);
     	conceitosRevisao.addAll(dataGenerator.generateIntermediatePredicates(rulesForRevision));
     	//Recupera todos os conceitos que fazem uso dos conceitos selecionados para revisao
     	//Se as regras intermediarias gerais tiverem que entrar Ž s— trocar a ordem das linhas.
