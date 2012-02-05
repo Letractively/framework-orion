@@ -17,6 +17,12 @@ public class Concept extends ForteResource {
     private List<ConceptRestriction> restrictions = null;
     private boolean abstractConcept = false;
 
+    public Concept(){
+    	atributos = new ArrayList<ConceptAttribute>();
+    	axiomas = new ArrayList<ConceptAxiom>();
+    	restrictions = new ArrayList<ConceptRestriction>();
+    }
+    
     /**
      * Sobrecargando metodo toString para forcar a escrita do Conceito como
      * um conceito do FORTE (Clausula de Horn). Se o conceito for abstrato,
